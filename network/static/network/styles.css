@@ -1,0 +1,23 @@
+html {
+    font-size: 15px;
+}
+
+.container {
+    margin-top: 3em;
+}
+
+.post {
+    border-bottom: 1px solid #F1F1F1;
+    margin-bottom: 1em;
+}
+
+.like-btn {
+    outline: none !important;
+    border: none;
+    background: inherit;
+    padding-left: 0px;
+}
+
+.post-likes {
+    display: inline;
+}
