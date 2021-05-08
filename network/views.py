@@ -3,8 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
-from .models import User
+from rest_framework import viewsets
+from .models import User, Post
+from .serializers import ReadPostSerializer
 
 
 def index(request):
@@ -61,3 +62,14 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    serializer_class = ReadPostSerializer
+    queryset = Post.objects.all()
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == 'list':
+            return queryset.filter(publisher=self.request.user)
+        return queryset
