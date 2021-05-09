@@ -71,5 +71,5 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         if self.action == 'list':
-            return queryset.filter(publisher=self.request.user)
+            return queryset.order_by('-published')
         return queryset
