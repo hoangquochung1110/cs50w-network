@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from rest_framework import viewsets
 from .models import User, Post
-from .serializers import ReadPostSerializer
+from .serializers import ReadPostSerializer, ReadUserSerializer
 
 
 def index(request):
@@ -73,3 +73,13 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return queryset.order_by('-published')
         return queryset
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = ReadUserSerializer
+    queryset = User.objects.all()
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == 'list' or self.action == 'retrieve':
+            return queryset.filter(id=self.request.user.id)

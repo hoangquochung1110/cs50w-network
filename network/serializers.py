@@ -6,7 +6,7 @@ from network.models import Post, User
 class ReadUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['id', 'username', 'email']
 
 
 class ReadPostSerializer(serializers.ModelSerializer):
@@ -14,6 +14,6 @@ class ReadPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id' ,'content', 'publisher', 'published', 'like']
+        fields = ['id', 'content', 'publisher', 'published', 'like']
 
 
