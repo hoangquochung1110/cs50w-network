@@ -22,7 +22,7 @@ function localize_datetime(dt){
 
 function populatePost(item){
     const allPostContainer = document.querySelector('.all-posts');
-    console.log(item);
+    //console.log(item);
     /*
         allPostContainer
             postContainer
@@ -63,7 +63,7 @@ async function createPostHead(item, headContainer){
     // Verify if signed in user is the owner of the current post to construct the button
     const response = await fetchUserID();
     const userID = response[0]['id'];
-    console.log(userID);
+    //console.log(userID);
 
     // render username, email address
     const poster = document.createElement('div');
@@ -104,6 +104,14 @@ function update_post(e){
     console.log(postContainer);
 }
 
+function handleNewPost(e){
+    e.preventDefault();
+    console.log(e.target);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    const newPostForm = document.querySelector('.new-post__form');
+
     getPosts();
+    newPostForm.addEventListener('submit', handleNewPost)
 });
