@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from .mixins import GetSerializerClassMixin
 from .models import User, Post
@@ -69,6 +70,7 @@ def register(request):
 class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     serializer_class = ReadPostSerializer
     queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated,]
     serializer_action_classes = {
         'list': ReadPostSerializer,
         'create': WritePostSerializer,
