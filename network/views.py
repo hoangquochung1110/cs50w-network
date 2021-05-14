@@ -4,8 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from rest_framework import viewsets
+
+from .mixins import GetSerializerClassMixin
 from .models import User, Post
-from .serializers import ReadPostSerializer, ReadUserSerializer
+from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer
 
 
 def index(request):
@@ -64,9 +66,16 @@ def register(request):
         return render(request, "network/register.html")
 
 
-class PostViewSet(viewsets.ModelViewSet):
+class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     serializer_class = ReadPostSerializer
     queryset = Post.objects.all()
+    serializer_action_classes = {
+        'list': ReadPostSerializer,
+        'create': WritePostSerializer,
+        'retrieve': ReadPostSerializer,
+        'update': WritePostSerializer,
+        'destroy': ReadPostSerializer,
+    }
 
     def get_queryset(self):
         queryset = self.queryset
