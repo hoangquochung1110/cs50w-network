@@ -35,25 +35,26 @@ html {
     display: inline;
 }
 
-.new-post {
+#new-post {
     min-height: 9em;
     border: 5px solid var(--new-post-color);
     margin-bottom: 2em;
 }
 
-.new-post__form {
+#new-post__form {
     margin: 0.5em;
+    width: 98%;
 }
 
-.new-post__form .new-post__content {
-    line-height: 3em;
-    padding: 1em .75em;
-}
-
-.new-post__share-btn {
+#new-post__share-btn {
     background-color: var(--new-post-color);
     outline: none !important;
     border: none !important;
     margin-top: .5em;
     color: white;
+}
+
+#new-post__form > textarea {
+    width: inherit;
+    height: 5em;
 }
