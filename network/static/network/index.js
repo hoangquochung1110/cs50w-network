@@ -108,10 +108,11 @@ function update_post(e){
 function handleNewPost(e){
     e.preventDefault();
     console.log(e.target);
+    console.log(document.querySelector('#new-post__body').value);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const newPostForm = document.querySelector('.new-post__form');
+    const newPostForm = document.querySelector('#new-post__form');
 
     getPosts();
     newPostForm.addEventListener('submit', handleNewPost)
