@@ -92,5 +92,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == 'list':
             return queryset.filter(id=self.request.user.id)
+        return queryset
