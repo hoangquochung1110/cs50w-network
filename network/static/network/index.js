@@ -1,3 +1,14 @@
+const allPostContainer = document.querySelector('.all-posts');
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const newPostForm = document.querySelector('#new-post__form');
+
+    getPosts();
+    newPostForm.addEventListener('submit', handleNewPost)
+});
+
+
 async function fetchUserID(){
     const response = await fetch('http://127.0.0.1:8000/users/');
     const result = await response.json();
@@ -8,6 +19,8 @@ function getPosts(){
     fetch('http://127.0.0.1:8000/posts/')
     .then(response => response.json())
     .then(posts => {
+        allPostContainer.innerHTML = ''; // clear .all-posts for every time reloading the page. Is there better way to handle this ?
+        //console.log(posts);
         posts.forEach(post => populatePost(post))
     })
 }
@@ -20,9 +33,18 @@ function localize_datetime(dt){
     return local_dt.toLocaleString();
 }
 
+/*
+TODO: HANDLE DUPLICATE ITEMS
+postsList = fetch('/posts/'); // get new, updated list of posts
+
+allPost = querySelector('.all-post');
+allPost.innerHTML = postsList.map(post, i) => renderPost()       <---- reassign allPost.innerHTML
+
+
+*/
+
 function populatePost(item){
-    const allPostContainer = document.querySelector('.all-posts');
-    //console.log(item);
+    // console.log(allPostContainer);
     /*
         allPostContainer
             postContainer
@@ -49,7 +71,9 @@ function populatePost(item){
     createPostFooter(item, footerContainer);
 
     // create postContainer that have 3 child elements: headContainer, postContent and likeContainer
-    const postContainer = document.createElement('div');
+    //const postContainer = document.createElement('div');
+    let postContainer = document.createElement('div');
+
     postContainer.className = 'post';
     postContainer.dataset.id = item['id']; // assign post id to div `post` for CRUD purposes
     [headContainer, postContent, footerContainer].forEach(element => postContainer.appendChild(element));
@@ -105,15 +129,34 @@ function update_post(e){
     console.log(postContainer);
 }
 
-function handleNewPost(e){
+async function handleNewPost(e){
     e.preventDefault();
     console.log(e.target);
-    console.log(document.querySelector('#new-post__body').value);
+
+    // TODO: consider if keep userID in global scope
+    const response = await fetchUserID();
+    const userID = response[0]['id'];
+
+    // get csrf token to attach to request
+    const csrftoken = Cookies.get('csrftoken');
+    fetch('http://127.0.0.1:8000/posts/',{
+        method: 'POST',
+        body: JSON.stringify({
+            "content": document.querySelector('#new-post__body').value,
+            "publisher": userID,
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        }
+    })
+    .then(response => response.json())
+    .then(result => {
+        getPosts();
+    });
+
+    // clear input
+    this.reset();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const newPostForm = document.querySelector('#new-post__form');
 
-    getPosts();
-    newPostForm.addEventListener('submit', handleNewPost)
-});
