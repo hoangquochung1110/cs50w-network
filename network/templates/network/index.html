@@ -1,8 +1,20 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
     {% if user.is_authenticated %}
     <div class="container">
+        <div class="user-profile-view">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top user-profile__img" src="{% static 'network/user.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 id="user-profile__username"></h5>
+                    <p id="user-profile__email-address"></p>
+                    <p id="user-profile__age"></p>
+                    <p id="user-profile__gender"></p>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-9">
                 <div id="new-post">
@@ -17,10 +29,13 @@
             </div>
 
             <div class="col-3">
-
-
             </div>
         </div>
     </div>
+
+    <div class="overlay">
+    </div>
+
+
     {% endif %}
 {% endblock %}

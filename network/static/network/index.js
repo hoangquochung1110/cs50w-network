@@ -1,11 +1,15 @@
 const allPostContainer = document.querySelector('.all-posts');
+const overlay = document.querySelector('.overlay');
+const profileView = document.querySelector('.user-profile-view');
 
 document.addEventListener('DOMContentLoaded', function() {
 
     const newPostForm = document.querySelector('#new-post__form');
 
     getPosts();
-    newPostForm.addEventListener('submit', handleNewPost)
+    newPostForm.addEventListener('submit', handleNewPost);
+    allPostContainer.addEventListener('click', showUserProfileView);
+    overlay.addEventListener('click', hideUserProfileView);
 });
 
 
@@ -44,45 +48,43 @@ allPost.innerHTML = postsList.map(post, i) => renderPost()       <---- reassign 
 */
 
 function populatePost(item){
-    // console.log(allPostContainer);
+//    console.log(item);
     /*
         allPostContainer
             postContainer
-                headContainer
+                headerContainer
                 contentContainer
                 footerContainer
 
     */
 
     // create headContainer that has 2 child elements: poster and editBtn
-    const headContainer = document.createElement('div');
-    headContainer.className = 'post__head';
-    createPostHead(item, headContainer);
+    const headerContainer = document.createElement('div');
+    headerContainer.className = 'post__header';
+    createPostHeader(item, headerContainer);
 
-
-    // create content text of the post
-    const postContent = document.createElement('div');
-    postContent.className = 'post__content';
-    postContent.innerHTML = item['content'];
+    // create bodyContainer that has 2 child elements: content and timestamp
+    const bodyContainer = document.createElement('div');
+    bodyContainer.className = 'post__body';
+    createPostBody(item, bodyContainer);
 
     // create footerContainer that has 2 child elements: likeBtn and likes
     const footerContainer = document.createElement('div');
     footerContainer.className = 'post__footer';
     createPostFooter(item, footerContainer);
 
-    // create postContainer that have 3 child elements: headContainer, postContent and likeContainer
+    // create postContainer that have 3 child elements: headerContainer, bodyContainer and footerContainer
     //const postContainer = document.createElement('div');
     let postContainer = document.createElement('div');
-
     postContainer.className = 'post';
     postContainer.dataset.id = item['id']; // assign post id to div `post` for CRUD purposes
-    [headContainer, postContent, footerContainer].forEach(element => postContainer.appendChild(element));
+    [headerContainer, bodyContainer, footerContainer].forEach(element => postContainer.appendChild(element));
 
     allPostContainer.appendChild(postContainer);
 
 }
 
-async function createPostHead(item, headContainer){
+async function createPostHeader(item, headerContainer){
     // PostHead: an element container containing username, email address, timestamp and (optional) edit button
     // Verify if signed in user is the owner of the current post to construct the button
     const response = await fetchUserID();
@@ -90,9 +92,11 @@ async function createPostHead(item, headContainer){
     //console.log(userID);
 
     // render username, email address
-    const poster = document.createElement('div');
-    poster.style.display = 'inline';
-    poster.innerHTML = `<span style="font-weight:bold">${item['publisher']['username']}</span> ${item['publisher']['email']} ◦ ${localize_datetime(item['published'])}`;
+    const poster = document.createElement('h6');
+    poster.dataset.userid = item['publisher']['id'];
+    poster.className = 'post__poster';
+    //poster.style.display = 'inline';
+    poster.innerHTML = `${item['publisher']['username']} <span style="font-weight:lighter">${item['publisher']['email']}</span>`;
 
     // render button to edit the post if current user owns this post
     if (item['publisher']['id'] == userID){
@@ -102,10 +106,23 @@ async function createPostHead(item, headContainer){
         editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>`
         editBtn.title = 'Edit Post';
         editBtn.addEventListener('click', update_post);
-        [poster, editBtn].forEach(element => headContainer.appendChild(element));
+        [poster, editBtn].forEach(element => headerContainer.appendChild(element));
     } else{
-        headContainer.appendChild(poster);
+        headerContainer.appendChild(poster);
     }
+}
+
+function createPostBody(item, bodyContainer){
+    // create content text of the post
+    const postContent = document.createElement('div');
+    postContent.className = 'post__content';
+    postContent.innerHTML = item['content'];
+
+    const postTimestamp = document.createElement('div');
+    postTimestamp.className = 'post__timestamp';
+    postTimestamp.innerHTML = localize_datetime(item['published']);
+
+    [postContent, postTimestamp].forEach(element => bodyContainer.appendChild(element));
 }
 
 function createPostFooter(item, footerContainer){
@@ -159,4 +176,49 @@ async function handleNewPost(e){
     this.reset();
 }
 
+function showUserProfileView(e){
+    // function to render a pop-up user profile card
 
+    let target = e.target;
+    console.log(target);
+
+    // event delegation
+    if (target.className != 'post__poster'){
+        return; // Skip if the trigger DOM element is not post__poster
+    }
+
+    // make user-profile-view overlap container
+    profileView.classList.add('user-profile-view--active');
+    overlay.style.display = 'block';
+
+    createUserProfile(target);
+
+}
+
+function hideUserProfileView(){
+    // function to hide a pop-up user profile card
+
+    profileView.classList.remove('user-profile-view--active');
+    overlay.style.display = 'none';
+}
+
+function createUserProfile(target){
+    // target: DOM element that triggered the event
+
+    const username = document.querySelector('#user-profile__username');
+    const emailAddress = document.querySelector('#user-profile__email-address');
+    const age = document.querySelector('#user-profile__age');
+    const gender = document.querySelector('#user-profile__gender');
+
+    console.log(target.dataset.userid);
+    let userID = target.dataset.userid;
+    fetch(`/users/${userID}`)
+    .then(response => response.json())
+    .then(result => {
+        username.innerHTML = result['username'];
+        emailAddress.innerHTML = result['email'];
+        age.innerHTML =  `${result['age']} years old`;
+        gender.innerHTML = result['gender'];
+
+    })
+}
