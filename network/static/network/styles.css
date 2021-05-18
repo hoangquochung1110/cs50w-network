@@ -8,7 +8,7 @@ html {
 }
 
 .container {
-    margin-top: 3em;
+    margin-top: .8em;
     position: relative;
     z-index: 0;
 }
@@ -74,12 +74,12 @@ html {
 .user-profile-view{
 	position: absolute;
     left: 35%;
-	top: 15%;
-	z-index: 1;
+	top: 12%;
+	z-index: 3; /* greater stack order makes this view sit in front of overlay */
 	max-width: 300px;
     margin: 40px auto 10px auto;
 	transition: 200ms ease-in-out;
-	transform: scale(0);
+	transform: scale(0); /* scale to 0 makes this view (still exists but) invisible */
 
 }
 
@@ -89,12 +89,12 @@ html {
 
 .overlay {
 	position: fixed;
+	display: none; /* hidden by default */
 	top: 0;
 	left: 0;
-	display: none;
-	width: 100%;
-	height: 100%;
+	width: 100%; /* cover the whole page */
+	height: 100%; /* cover the whole page */
 	opacity: 1;
-    /*background-color: rgb(0, 0, 0, 0.5);*/
-
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
 }

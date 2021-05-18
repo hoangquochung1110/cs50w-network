@@ -3,23 +3,23 @@
 
 {% block body %}
     {% if user.is_authenticated %}
-    <div class="container">
-        <div class="user-profile-view">
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top user-profile__img" src="{% static 'network/user.png' %}" alt="Card image cap">
-                <div class="card-body">
-                    <h4 id="user-profile__username"></h4>
-                    <!--
-                    <p id="user-profile__email-address"></p>
-                    <p id="user-profile__age"></p>
-                    <p id="user-profile__gender"></p>
-                    -->
-                    <div id="user-profile__followers"></div>
-                    <div id="user-profile__following"></div>
-                    <div id="user-profile__num_of_posts"></div>
-                </div>
+    <div class="user-profile-view">
+        <div class="card">
+            <img class="card-img-top user-profile__img" src="{% static 'network/user.png' %}" alt="Card image cap">
+            <div class="card-body">
+                <h4 id="user-profile__username"></h4>
+                <!--
+                <p id="user-profile__email-address"></p>
+                <p id="user-profile__age"></p>
+                <p id="user-profile__gender"></p>
+                -->
+                <div id="user-profile__followers"></div>
+                <div id="user-profile__following"></div>
+                <div id="user-profile__num_of_posts"></div>
             </div>
         </div>
+    </div>
+    <div class="container">
         <div class="row">
             <div class="col-9">
                 <div id="new-post">
