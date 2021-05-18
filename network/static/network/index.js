@@ -206,9 +206,14 @@ function createUserProfile(target){
     // target: DOM element that triggered the event
 
     const username = document.querySelector('#user-profile__username');
+    /*
     const emailAddress = document.querySelector('#user-profile__email-address');
     const age = document.querySelector('#user-profile__age');
     const gender = document.querySelector('#user-profile__gender');
+    */
+    const num_of_followers = document.querySelector('#user-profile__followers');
+    const num_of_following = document.querySelector('#user-profile__following');
+    const num_of_posts = document.querySelector('#user-profile__num_of_posts');
 
     console.log(target.dataset.userid);
     let userID = target.dataset.userid;
@@ -216,9 +221,14 @@ function createUserProfile(target){
     .then(response => response.json())
     .then(result => {
         username.innerHTML = result['username'];
+        /*
         emailAddress.innerHTML = result['email'];
         age.innerHTML =  `${result['age']} years old`;
         gender.innerHTML = result['gender'];
+        */
+        num_of_followers.innerHTML = `<span style="font-weight:bold">${result['number_of_followers']}</span> followers`;
+        num_of_following.innerHTML = `<span style="font-weight:bold">${result['number_of_following']}</span> following`;
+        num_of_posts.innerHTML = `<span style="font-weight:bold">${result['number_of_posts']}</span> posts`;
 
     })
 }
