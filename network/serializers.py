@@ -17,16 +17,31 @@ class ReadUserSerializer(serializers.ModelSerializer):
     following = FollowSerializer(many=True)
     number_of_following = serializers.SerializerMethodField()
     number_of_followers = serializers.SerializerMethodField()
+    number_of_posts = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'age', 'gender', 'followers', 'number_of_followers', 'following', 'number_of_following', ]
+        fields = [
+            'id',
+            'username',
+            'email',
+            'age',
+            'gender',
+            'followers',
+            'number_of_followers',
+            'following',
+            'number_of_following',
+            'number_of_posts',
+        ]
 
     def get_number_of_followers(self, obj):
         return obj.followers.count()
 
     def get_number_of_following(self, obj):
         return obj.following.count()
+
+    def get_number_of_posts(self, obj):
+        return obj.posts.count()
 
 
 class ReadPostSerializer(serializers.ModelSerializer):
