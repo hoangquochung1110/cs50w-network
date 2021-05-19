@@ -1,0 +1,5 @@
+Django==3.1.7
+djangorestframework==3.12.2
+drf-spectacular==0.15.1
+Pillow==8.1.2
+drf-nested-routers==0.93.3
