@@ -69,7 +69,7 @@ def register(request):
 
 class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     serializer_class = ReadPostSerializer
-    queryset = Post.objects.all()
+
     permission_classes = [IsAuthenticated,]
     serializer_action_classes = {
         'list': ReadPostSerializer,
@@ -80,7 +80,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     }
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = Post.objects.filter(publisher_id=self.kwargs['publisher_pk'])
         if self.action == 'list':
             return queryset.order_by('-published')
         return queryset
@@ -88,6 +88,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = ReadUserSerializer
+    permission_classes = [IsAuthenticated, ]
     queryset = User.objects.all()
 
     def get_queryset(self):
