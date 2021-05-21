@@ -23,7 +23,7 @@ class User(AbstractUser):
 
 class Post(models.Model):
     content = models.TextField(max_length=200)
-    publisher = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
+    publisher = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)  # TODO: should be posts (plural) or post (singular)
     published = models.DateTimeField(auto_now=True)
     like = models.IntegerField(default=0)
 

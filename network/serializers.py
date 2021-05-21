@@ -15,6 +15,7 @@ class FollowSerializer(serializers.ModelSerializer):
 class ReadUserSerializer(serializers.ModelSerializer):
     followers = FollowSerializer(many=True)
     following = FollowSerializer(many=True)
+    # posts = ReadPostSerializer(many=True)
     number_of_following = serializers.SerializerMethodField()
     number_of_followers = serializers.SerializerMethodField()
     number_of_posts = serializers.SerializerMethodField()
@@ -33,6 +34,7 @@ class ReadUserSerializer(serializers.ModelSerializer):
             'number_of_following',
             'number_of_posts',
         ]
+
 
     def get_number_of_followers(self, obj):
         return obj.followers.count()
@@ -53,8 +55,12 @@ class ReadPostSerializer(serializers.ModelSerializer):
 
 
 class WritePostSerializer(serializers.ModelSerializer):
-    publisher = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Post
-        fields = ['content', 'publisher', ]
+        fields = ['content', ]
+
+    def create(self, validated_data):
+        publisher = User.objects.get(pk=self.context["view"].kwargs["publisher_pk"])
+        validated_data["publisher"] = publisher
+        return Post.objects.create(**validated_data)
