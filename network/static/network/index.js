@@ -148,7 +148,7 @@ function update_post(e){
 
 async function handleNewPost(e){
     e.preventDefault();
-    console.log(e.target);
+    //console.log(e.target);
 
     // TODO: consider if keep userID in global scope
     const response = await fetchUserID();
@@ -156,7 +156,7 @@ async function handleNewPost(e){
 
     // get csrf token to attach to request
     const csrftoken = Cookies.get('csrftoken');
-    fetch('http://127.0.0.1:8000/posts/',{
+    fetch(`/users/${userID}/posts/`,{
         method: 'POST',
         body: JSON.stringify({
             "content": document.querySelector('#new-post__body').value,
@@ -170,6 +170,9 @@ async function handleNewPost(e){
     .then(response => response.json())
     .then(result => {
         getPosts();
+    })
+    .catch((error) => {
+        console.error('Error: ', error);
     });
 
     // clear input
