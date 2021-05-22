@@ -3,8 +3,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import GenericViewSet
 
 from .mixins import GetSerializerClassMixin
 from .models import User, Post
@@ -67,9 +69,20 @@ def register(request):
         return render(request, "network/register.html")
 
 
-class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
+class PublicPostListView(mixins.ListModelMixin,
+                   GenericViewSet):
+    """
+    A View for get list of all posts of all users
+    """
+    queryset = Post.objects.order_by('-published')
     serializer_class = ReadPostSerializer
 
+
+class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
+    """
+    This view is nested in UserViewSet
+    """
+    serializer_class = ReadPostSerializer
     permission_classes = [IsAuthenticated,]
     serializer_action_classes = {
         'list': ReadPostSerializer,
