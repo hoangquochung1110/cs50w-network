@@ -4,18 +4,29 @@
 {% block body %}
     {% if user.is_authenticated %}
     <div class="user-profile-view">
-        <div class="card">
-            <img class="card-img-top user-profile__img" src="{% static 'network/user.png' %}" alt="Card image cap">
-            <div class="card-body">
-                <h4 id="user-profile__username"></h4>
-                <!--
-                <p id="user-profile__email-address"></p>
-                <p id="user-profile__age"></p>
-                <p id="user-profile__gender"></p>
-                -->
-                <div id="user-profile__followers"></div>
-                <div id="user-profile__following"></div>
-                <div id="user-profile__num_of_posts"></div>
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img class="card-img-top user-profile__img" src="{% static 'network/user.png' %}" alt="Card image cap">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <div id="user-profile__title">
+                            <div id="user-profile__username"></div>
+                            <button id="user-profile__timeline-btn">Timeline</button>
+                            <button id="user-profile__follow-btn">Follow</button>
+        
+                        </div>
+                        <!--
+                        <p id="user-profile__email-address"></p>
+                        <p id="user-profile__age"></p>
+                        <p id="user-profile__gender"></p>
+                        -->
+                        <div id="user-profile__followers"></div>
+                        <div id="user-profile__following"></div>
+                        <div id="user-profile__num_of_posts"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
