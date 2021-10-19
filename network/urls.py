@@ -19,6 +19,7 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
+    path("<str:username>", views.timeline, name="timeline"),
     path("", include(router.urls)),
     path("", include(users_router.urls)),
     path("", include(default_router.urls)),

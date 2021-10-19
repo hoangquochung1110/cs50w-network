@@ -1,0 +1,13 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <header id="user-profile-header">
+        <div id="user-profile-header__username">{{user.username}}</div>
+        <div>
+            <div id="user-profile-header__followers">Followers</div>
+            <div id="user-profile-header__following">Following</div>
+            <div id="user-profile-header__num_of_posts">Posts</div>
+        </div>
+    </header>
+{% endblock %}

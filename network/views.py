@@ -7,7 +7,7 @@ from rest_framework import viewsets, mixins
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
-
+from django.shortcuts import get_object_or_404
 from .mixins import GetSerializerClassMixin
 from .models import User, Post
 from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer
@@ -67,6 +67,11 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def timeline(request, username):
+    user = get_object_or_404(User, username=username)
+    return render(request, 'network/timeline.html', {"user": user})
 
 
 class PublicPostListView(mixins.ListModelMixin,
