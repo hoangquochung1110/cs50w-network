@@ -2,12 +2,23 @@
 {% load static %}
 
 {% block body %}
-    <header id="user-profile-header">
-        <div id="user-profile-header__username">{{user.username}}</div>
-        <div>
-            <div id="user-profile-header__followers">Followers</div>
-            <div id="user-profile-header__following">Following</div>
-            <div id="user-profile-header__num_of_posts">Posts</div>
-        </div>
-    </header>
+    <div class="container">
+        <header id="user-profile-header">
+            <div class="row">
+                <div id="user-profile-header__username">{{visited_user.username}}</div>
+                {% if user.id != visited_user.id %}
+                <button class="follow_btn">Follow</button>
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div id="user-profile-header__followers">{{visited_user.followers_count}} Followers</div>
+                <div id="user-profile-header__following">{{visited_user.following_count}} Following</div>
+                <div id="user-profile-header__num_of_posts">{{visited_user.posts_count}} Posts</div>
+            </div>
+            <div><span style="font-weight:bold">{{visited_user.first_name}} {{visited_user.last_name}}</span></div>
+            <div>Date joined: {{visited_user.date_joined.date}}</div>
+        </header>
+    </div>
+
 {% endblock %}

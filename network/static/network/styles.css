@@ -1,5 +1,6 @@
 :root {
     --new-post-color: #4E9EED;
+    --section-breaker-color: #D6D1D1;
 }
 
 html {
@@ -97,4 +98,21 @@ html {
 	opacity: 1;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+}
+
+#user-profile-header{
+    padding-bottom: 1em;
+    border-bottom: 0.05em solid var(--section-breaker-color);
+}
+
+#user-profile-header > .row {
+    gap: 3em;
+}
+
+#user-profile-header > * {
+    margin: .5rem; /* rem instead of em because of the font-size as below */
+}
+
+#user-profile-header__username{
+    font-size: 1.8em;
 }
