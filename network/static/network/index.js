@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-async function fetchUserID(){
+async function fetchHostUser(){
+    // get data of the currently signed in user
     const response = await fetch('http://127.0.0.1:8000/users/');
     const result = await response.json();
     return result
@@ -103,10 +104,9 @@ function populatePost(item, parentContainer){
 
 async function createPostHeader(item, headerContainer){
     // PostHead: an element container containing username, email address, timestamp and (optional) edit button
-    // Verify if signed in user is the owner of the current post to construct the button
-    const response = await fetchUserID();
-    const userID = response[0]['id'];
-    //console.log(userID);
+    // Verify if currently signed in user is the owner of the current post to construct the button
+    const response = await fetchHostUser();
+    const hostUserID = response[0]['id'];
 
     // render username, email address
     const poster = document.createElement('h6');
@@ -116,7 +116,7 @@ async function createPostHeader(item, headerContainer){
     poster.innerHTML = `${item['publisher']['username']}`;
 
     // render button to edit the post if current user owns this post
-    if (item['publisher']['id'] == userID){
+    if (item['publisher']['id'] == hostUserID){
         const editBtn = document.createElement('button');
         editBtn.className = 'post__edit-btn';
         editBtn.dataset.id = item['id'];
@@ -168,7 +168,7 @@ async function handleNewPost(e){
     //console.log(e.target);
 
     // TODO: consider if keep userID in global scope
-    const response = await fetchUserID();
+    const response = await fetchHostUser();
     const userID = response[0]['id'];
 
     // get csrf token to attach to request
@@ -222,9 +222,8 @@ function hideUserProfilePopup(){
     overlay.style.display = 'none';
 }
 
-function createUserProfile(target){
+async function createUserProfile(target){
     // target: DOM element that triggered the event
-
     const username = document.querySelector('#user-profile-popup__username');
     /*
     const emailAddress = document.querySelector('#user-profile__email-address');
@@ -235,8 +234,19 @@ function createUserProfile(target){
     const following_count = document.querySelector('#user-profile-popup__following');
     const posts_count = document.querySelector('#user-profile-popup__num_of_posts');
 
-    let userID = target.dataset.userid;
-    fetch(`/users/${userID}`)
+    let targetUserID = target.dataset.userid;
+
+    const response = await fetchHostUser();
+    const hostUserID = response[0]['id'];
+    const followBtn = document.querySelector('.follow-btn');
+    followBtn.style.display = 'inline-block'; // set the default display
+
+    console.log(hostUserID, targetUserID);
+    if (hostUserID == targetUserID){
+        followBtn.style.display = 'none';   // unable to follow yourself
+    }
+
+    fetch(`/users/${targetUserID}`)
     .then(response => response.json())
     .then(result => {
         username.innerHTML = `<span style="font-weight:bold">${result['username']}</span>`;
