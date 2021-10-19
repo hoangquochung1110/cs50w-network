@@ -231,9 +231,9 @@ function createUserProfile(target){
     const age = document.querySelector('#user-profile__age');
     const gender = document.querySelector('#user-profile__gender');
     */
-    const num_of_followers = document.querySelector('#user-profile-popup__followers');
-    const num_of_following = document.querySelector('#user-profile-popup__following');
-    const num_of_posts = document.querySelector('#user-profile-popup__num_of_posts');
+    const followers_count = document.querySelector('#user-profile-popup__followers');
+    const following_count = document.querySelector('#user-profile-popup__following');
+    const posts_count = document.querySelector('#user-profile-popup__num_of_posts');
 
     let userID = target.dataset.userid;
     fetch(`/users/${userID}`)
@@ -245,15 +245,15 @@ function createUserProfile(target){
         age.innerHTML =  `${result['age']} years old`;
         gender.innerHTML = result['gender'];
         */
-        num_of_followers.innerHTML = `<span style="font-weight:bold">${result['number_of_followers']}</span> followers`;
-        num_of_following.innerHTML = `<span style="font-weight:bold">${result['number_of_following']}</span> following`;
-        num_of_posts.innerHTML = `<span style="font-weight:bold">${result['number_of_posts']}</span> posts`;
+        followers_count.innerHTML = `<span style="font-weight:bold">${result['followers_count']}</span> followers`;
+        following_count.innerHTML = `<span style="font-weight:bold">${result['following_count']}</span> following`;
+        posts_count.innerHTML = `<span style="font-weight:bold">${result['posts_count']}</span> posts`;
 
     })
 
     // listen for event clicking Timeline
     const userTimelineBtn = document.querySelector('#user-profile-popup__timeline-btn');
     userTimelineBtn.addEventListener('click', () => {
-        window.location.href = `/${target.innerText}`; // get the username of event.target
+        window.location.href = `/${target.innerText}`; // get the username of event.target then redirect to /username/ url
     })
 }
