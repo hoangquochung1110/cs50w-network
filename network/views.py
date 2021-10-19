@@ -71,7 +71,8 @@ def register(request):
 
 def timeline(request, username):
     user = get_object_or_404(User, username=username)
-    return render(request, 'network/timeline.html', {"user": user})
+    print(request.user)
+    return render(request, 'network/timeline.html', {'visited_user': user})
 
 
 class PublicPostListView(mixins.ListModelMixin,
