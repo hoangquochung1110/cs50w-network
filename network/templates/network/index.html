@@ -14,7 +14,7 @@
                         <div id="user-profile-popup__title">
                             <div id="user-profile-popup__username"></div>
                             <button id="user-profile-popup__timeline-btn">Timeline</button>
-                            <button id="user-profile-popup__follow-btn">Follow</button>
+                            <button class="follow-btn">Follow</button>
         
                         </div>
                         <!--
@@ -54,4 +54,7 @@
 
 
     {% endif %}
+    <script src="{% static 'network/index.js' %}"></script>
+
 {% endblock %}
+
