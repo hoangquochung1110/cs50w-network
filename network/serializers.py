@@ -16,7 +16,10 @@ class ReadUserSerializer(serializers.ModelSerializer):
     followers = FollowSerializer(many=True)
     following = FollowSerializer(many=True)
     # posts = ReadPostSerializer(many=True)
-
+    following_count = serializers.IntegerField(read_only=True)
+    followers_count = serializers.IntegerField(read_only=True)
+    posts_count = serializers.IntegerField(read_only=True)
+    
     class Meta:
         model = User
         fields = [
