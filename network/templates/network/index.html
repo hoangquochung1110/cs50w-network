@@ -3,7 +3,7 @@
 
 {% block body %}
     {% if user.is_authenticated %}
-    <div class="user-profile-view">
+    <div class="user-profile-popup">
         <div class="card mb-3">
             <div class="row g-0">
                 <div class="col-md-4">
@@ -11,10 +11,10 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <div id="user-profile__title">
-                            <div id="user-profile__username"></div>
-                            <button id="user-profile__timeline-btn">Timeline</button>
-                            <button id="user-profile__follow-btn">Follow</button>
+                        <div id="user-profile-popup__title">
+                            <div id="user-profile-popup__username"></div>
+                            <button id="user-profile-popup__timeline-btn">Timeline</button>
+                            <button id="user-profile-popup__follow-btn">Follow</button>
         
                         </div>
                         <!--
@@ -22,9 +22,9 @@
                         <p id="user-profile__age"></p>
                         <p id="user-profile__gender"></p>
                         -->
-                        <div id="user-profile__followers"></div>
-                        <div id="user-profile__following"></div>
-                        <div id="user-profile__num_of_posts"></div>
+                        <div id="user-profile-popup__followers"></div>
+                        <div id="user-profile-popup__following"></div>
+                        <div id="user-profile-popup__num_of_posts"></div>
                     </div>
                 </div>
             </div>

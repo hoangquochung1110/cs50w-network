@@ -1,6 +1,7 @@
 const allPostContainer = document.querySelector('.all-posts');
 const overlay = document.querySelector('.overlay');
-const profileView = document.querySelector('.user-profile-view');
+const userProfilePopup = document.querySelector('.user-profile-popup');
+const userProfilePostContainer = document.querySelector('#user-profile__posts');
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -8,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     getPosts();
     newPostForm.addEventListener('submit', handleNewPost);
-    allPostContainer.addEventListener('click', showUserProfileView);
-    overlay.addEventListener('click', hideUserProfileView);
+    allPostContainer.addEventListener('click', showUserProfilePopup);
+    overlay.addEventListener('click', hideUserProfilePopup);
 });
 
 
@@ -19,13 +20,27 @@ async function fetchUserID(){
     return result
 }
 
-function getPosts(){
-    fetch('http://127.0.0.1:8000/posts/')
+function getPosts(user_id=0){
+   /*
+   user_id == 0 to indicate loading all posts from all users
+   */
+    console.table(user_id);
+    var REQUEST_URL = '';
+    var parentContainer;
+    if (user_id == 0){
+        REQUEST_URL = '/posts/';
+        parentContainer = allPostContainer;
+    } else {
+        REQUEST_URL = `/users/${user_id}/posts/`;
+        parentContainer = userProfilePostContainer;
+    }
+
+    fetch(REQUEST_URL)
     .then(response => response.json())
     .then(posts => {
         allPostContainer.innerHTML = ''; // clear .all-posts for every time reloading the page. Is there better way to handle this ?
         //console.log(posts);
-        posts.forEach(post => populatePost(post))
+        posts.forEach(post => populatePost(post, parentContainer))
     })
 }
 
@@ -47,10 +62,12 @@ allPost.innerHTML = postsList.map(post, i) => renderPost()       <---- reassign 
 
 */
 
-function populatePost(item){
-//    console.log(item);
+function populatePost(item, parentContainer){
+// TODO: refactor params to reuse the func -> Add a param named ParentContainer. ParentContainer can be 'all-posts' or 'user-x-posts'
+//
+//    console.log(item)
     /*
-        allPostContainer
+        parentContainer
             postContainer
                 headerContainer
                 contentContainer
@@ -80,7 +97,7 @@ function populatePost(item){
     postContainer.dataset.id = item['id']; // assign post id to div `post` for CRUD purposes
     [headerContainer, bodyContainer, footerContainer].forEach(element => postContainer.appendChild(element));
 
-    allPostContainer.appendChild(postContainer);
+    parentContainer.appendChild(postContainer);
 
 }
 
@@ -96,7 +113,7 @@ async function createPostHeader(item, headerContainer){
     poster.dataset.userid = item['publisher']['id'];
     poster.className = 'post__poster';
     //poster.style.display = 'inline';
-    poster.innerHTML = `${item['publisher']['username']} <span style="font-weight:lighter">${item['publisher']['email']}</span>`;
+    poster.innerHTML = `${item['publisher']['username']}`;
 
     // render button to edit the post if current user owns this post
     if (item['publisher']['id'] == userID){
@@ -179,8 +196,8 @@ async function handleNewPost(e){
     this.reset();
 }
 
-function showUserProfileView(e){
-    // function to render a pop-up user profile card
+function showUserProfilePopup(e){
+    // function to render a pop-up user profile card and handle overlay effect
 
     let target = e.target;
     console.log(target);
@@ -190,40 +207,39 @@ function showUserProfileView(e){
         return; // Skip if the trigger DOM element is not post__poster
     }
 
-    // make user-profile-view overlap container
-    profileView.classList.add('user-profile-view--active');
+    // make user-profile-popup overlap container
+    userProfilePopup.classList.add('user-profile-popup--active');
     overlay.style.display = 'block';
 
     createUserProfile(target);
 
 }
 
-function hideUserProfileView(){
+function hideUserProfilePopup(){
     // function to hide a pop-up user profile card
 
-    profileView.classList.remove('user-profile-view--active');
+    userProfilePopup.classList.remove('user-profile-popup--active');
     overlay.style.display = 'none';
 }
 
 function createUserProfile(target){
     // target: DOM element that triggered the event
 
-    const username = document.querySelector('#user-profile__username');
+    const username = document.querySelector('#user-profile-popup__username');
     /*
     const emailAddress = document.querySelector('#user-profile__email-address');
     const age = document.querySelector('#user-profile__age');
     const gender = document.querySelector('#user-profile__gender');
     */
-    const num_of_followers = document.querySelector('#user-profile__followers');
-    const num_of_following = document.querySelector('#user-profile__following');
-    const num_of_posts = document.querySelector('#user-profile__num_of_posts');
+    const num_of_followers = document.querySelector('#user-profile-popup__followers');
+    const num_of_following = document.querySelector('#user-profile-popup__following');
+    const num_of_posts = document.querySelector('#user-profile-popup__num_of_posts');
 
-    console.log(target.dataset.userid);
     let userID = target.dataset.userid;
     fetch(`/users/${userID}`)
     .then(response => response.json())
     .then(result => {
-        username.innerHTML = result['username'];
+        username.innerHTML = `<span style="font-weight:bold">${result['username']}</span>`;
         /*
         emailAddress.innerHTML = result['email'];
         age.innerHTML =  `${result['age']} years old`;
@@ -233,5 +249,11 @@ function createUserProfile(target){
         num_of_following.innerHTML = `<span style="font-weight:bold">${result['number_of_following']}</span> following`;
         num_of_posts.innerHTML = `<span style="font-weight:bold">${result['number_of_posts']}</span> posts`;
 
+    })
+
+    // listen for event clicking Timeline
+    const userTimelineBtn = document.querySelector('#user-profile-popup__timeline-btn');
+    userTimelineBtn.addEventListener('click', () => {
+        window.location.href = `/${target.innerText}`; // get the username of event.target
     })
 }
