@@ -1,27 +1,39 @@
 
 from django.urls import path, include
 from rest_framework_nested import routers
-from rest_framework import routers as drf_routers
-from . import views
-from .views import PostViewSet, UserViewSet, PublicPostListView
+from .views import PostViewSet, UserViewSet, PublicPostListView, index, register, login_view, logout_view, timeline
+
+# router = routers.SimpleRouter()
+# router.register('users', UserViewSet)
+
+# users_router = router.NestedSimpleRouter()
+# default_router.register('posts', PublicPostListView, basename='post-list')
+
+# users_router = routers.NestedSimpleRouter(router, r'users', lookup='publisher')
+# users_router.register(r'posts', PostViewSet, basename='user-posts')
 
 router = routers.SimpleRouter()
-router.register('users', UserViewSet)
+router.register(r'users', UserViewSet)
+router.register(r'posts', PublicPostListView)
 
-default_router = drf_routers.DefaultRouter()
-default_router.register('posts', PublicPostListView, basename='post-list')
-
-users_router = routers.NestedSimpleRouter(router, r'users', lookup='publisher')
+users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
 users_router.register(r'posts', PostViewSet, basename='user-posts')
+# 'basename' is optional. Needed only if the same viewset is registered more than once
+# Official DRF docs on this option: http://www.django-rest-framework.org/api-guide/routers/
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("login", views.login_view, name="login"),
-    path("logout", views.logout_view, name="logout"),
-    path("register", views.register, name="register"),
-    path("<str:username>", views.timeline, name="timeline"),
-    path("", include(router.urls)),
-    path("", include(users_router.urls)),
-    path("", include(default_router.urls)),
+
+]
+
+
+urlpatterns = [
+    path("", index, name="index"),
+    path("login", login_view, name="login"),
+    path("logout", logout_view, name="logout"),
+    path("register", register, name="register"),
+    path("<str:username>", timeline, name="timeline"),
+
+    path(r'', include(router.urls)),
+    path(r'', include(users_router.urls)),
 
 ]

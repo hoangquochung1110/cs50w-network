@@ -88,18 +88,21 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     """
     This view is nested in UserViewSet
     """
+    queryset = Post.objects.all()
     serializer_class = ReadPostSerializer
     permission_classes = [IsAuthenticated,]
     serializer_action_classes = {
         'list': ReadPostSerializer,
         'create': WritePostSerializer,
         'retrieve': ReadPostSerializer,
+        'partial_update': WritePostSerializer,
         'update': WritePostSerializer,
         'destroy': ReadPostSerializer,
     }
 
     def get_queryset(self):
-        queryset = Post.objects.filter(publisher_id=self.kwargs['publisher_pk'])
+        publisher_id = self.kwargs['user_pk']
+        queryset = Post.objects.filter(publisher_id=publisher_id)
         if self.action == 'list':
             return queryset.order_by('-published')
         return queryset
@@ -109,7 +112,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = ReadUserSerializer
     permission_classes = [IsAuthenticated, ]
     queryset = User.objects.all()
-
+    
     def get_queryset(self):
         queryset = self.queryset
         if self.action == 'list':
