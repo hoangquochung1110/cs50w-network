@@ -10,7 +10,9 @@ from rest_framework.viewsets import GenericViewSet
 from django.shortcuts import get_object_or_404
 from .mixins import GetSerializerClassMixin
 from .models import User, Post
-from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer
+from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer, FollowUserSerializer
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 
 def index(request):
@@ -108,13 +110,29 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         return queryset
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     serializer_class = ReadUserSerializer
     permission_classes = [IsAuthenticated, ]
     queryset = User.objects.all()
-    
+
+    serializer_action_classes = {
+        'list': ReadUserSerializer,
+        'create': ReadUserSerializer,
+        'retrieve': ReadUserSerializer,
+        'partial_update': ReadUserSerializer,
+        'update': ReadUserSerializer,
+        'destroy': ReadUserSerializer,
+        'follow': FollowUserSerializer,
+    }
+
     def get_queryset(self):
         queryset = self.queryset
         if self.action == 'list':
             return queryset.filter(id=self.request.user.id)
         return queryset
+
+    @action(detail=False, methods=['post'])
+    def follow(self, request, pk=None):
+        user = self.get_object()
+        response_serializer = ReadUserSerializer(instance=user)
+        return Response(response_serializer.data)
