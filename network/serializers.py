@@ -51,6 +51,6 @@ class WritePostSerializer(serializers.ModelSerializer):
         fields = ['content', ]
 
     def create(self, validated_data):
-        publisher = User.objects.get(pk=self.context["view"].kwargs["publisher_pk"])
+        publisher = User.objects.get(pk=self.context["view"].kwargs["user_pk"])
         validated_data["publisher"] = publisher
         return Post.objects.create(**validated_data)
