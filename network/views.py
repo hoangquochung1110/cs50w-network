@@ -3,17 +3,17 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
 from django.shortcuts import get_object_or_404
-from .mixins import GetSerializerClassMixin
+from .mixins import GetSerializerClassMixin, GetPermissionClassMixin
 from .models import User, Post
-from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer, FollowUserSerializer
+from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
+from .permissions import FollowOthersOnly
 
 def index(request):
     return render(request, "network/index.html")
@@ -110,10 +110,9 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         return queryset
 
 
-class UserViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
-    serializer_class = ReadUserSerializer
-    permission_classes = [IsAuthenticated, ]
+class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
     queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
 
     serializer_action_classes = {
         'list': ReadUserSerializer,
@@ -122,7 +121,7 @@ class UserViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'partial_update': ReadUserSerializer,
         'update': ReadUserSerializer,
         'destroy': ReadUserSerializer,
-        'follow': FollowUserSerializer,
+        'follow': None,
     }
 
     def get_queryset(self):
@@ -131,8 +130,10 @@ class UserViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             return queryset.filter(id=self.request.user.id)
         return queryset
 
-    @action(detail=False, methods=['post'])
-    def follow(self, request, pk=None):
-        user = self.get_object()
-        response_serializer = ReadUserSerializer(instance=user)
+    @action(detail=True, methods=['post'], permission_classes=[FollowOthersOnly,])
+    def follow(self, request, pk):
+        print(self.permission_classes)
+        visited_user = self.get_object()
+        visited_user.followers.add(request.user)
+        response_serializer = ReadUserSerializer(instance=request.user)
         return Response(response_serializer.data)
