@@ -19,6 +19,14 @@
             <div><span style="font-weight:bold">{{visited_user.first_name}} {{visited_user.last_name}}</span></div>
             <div>Date joined: {{visited_user.date_joined.date}}</div>
         </header>
+
+        <main>
+            <div class='user-posts'>
+                {{ visited_user.id|json_script:"visited_user_id" }}
+            </div>
+        </main>
     </div>
+
+    <script src="{% static 'network/timeline.js' %}" type="module"></script>
 
 {% endblock %}

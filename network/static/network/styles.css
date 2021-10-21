@@ -116,3 +116,7 @@ html {
 #user-profile-header__username{
     font-size: 1.8em;
 }
+
+.user-posts {
+    margin: .5em;
+}
