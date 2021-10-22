@@ -120,3 +120,7 @@ html {
 .user-posts {
     margin: .5em;
 }
+
+.md-15 {
+    font-size: 15px !important;
+}

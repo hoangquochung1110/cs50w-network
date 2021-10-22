@@ -132,7 +132,6 @@ class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], permission_classes=[FollowOthersOnly,])
     def follow(self, request, pk):
-        print(self.permission_classes)
         visited_user = self.get_object()
         visited_user.followers.add(request.user)
         response_serializer = ReadUserSerializer(instance=request.user)

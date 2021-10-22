@@ -9,7 +9,7 @@ class FollowSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ['username', 'age', 'gender']
+        fields = ['id', 'username', 'age', 'gender']
 
 
 class ReadUserSerializer(serializers.ModelSerializer):

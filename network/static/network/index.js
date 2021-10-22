@@ -7,8 +7,6 @@ const userProfilePopup = document.querySelector('.user-profile-popup');
 document.addEventListener('DOMContentLoaded', function() {
 
     const newPostForm = document.querySelector('#new-post__form');
-    console.log(newPostForm);
-    console.log('running index.html');
     getPosts('/posts/', allPostContainer);
     newPostForm.addEventListener('submit', handleNewPost);
     allPostContainer.addEventListener('click', showUserProfilePopup);
@@ -65,7 +63,6 @@ function showUserProfilePopup(e){
     // function to render a pop-up user profile card and handle overlay effect
 
     let target = e.target;
-    console.log(target);
 
     // event delegation
     if (target.className != 'post__poster'){
@@ -90,11 +87,6 @@ function hideUserProfilePopup(){
 async function createUserProfile(target){
     // target: DOM element that triggered the event
     const username = document.querySelector('#user-profile-popup__username');
-    /*
-    const emailAddress = document.querySelector('#user-profile__email-address');
-    const age = document.querySelector('#user-profile__age');
-    const gender = document.querySelector('#user-profile__gender');
-    */
     const followers_count = document.querySelector('#user-profile-popup__followers');
     const following_count = document.querySelector('#user-profile-popup__following');
     const posts_count = document.querySelector('#user-profile-popup__num_of_posts');
@@ -106,23 +98,25 @@ async function createUserProfile(target){
     const followBtn = document.querySelector('.follow-btn');
     followBtn.style.display = 'inline-block'; // set the default display
 
-    console.log(hostUserID, targetUserID);
-    if (hostUserID == targetUserID){
-        followBtn.style.display = 'none';   // unable to follow yourself
-    }
-
     fetch(`/users/${targetUserID}`)
     .then(response => response.json())
     .then(result => {
+
         username.innerHTML = `<span style="font-weight:bold">${result['username']}</span>`;
-        /*
-        emailAddress.innerHTML = result['email'];
-        age.innerHTML =  `${result['age']} years old`;
-        gender.innerHTML = result['gender'];
-        */
         followers_count.innerHTML = `<span style="font-weight:bold">${result['followers_count']}</span> followers`;
         following_count.innerHTML = `<span style="font-weight:bold">${result['following_count']}</span> following`;
         posts_count.innerHTML = `<span style="font-weight:bold">${result['posts_count']}</span> posts`;
+
+        if (hostUserID == targetUserID) followBtn.style.display = 'none';   // unable to follow yourself
+        else {
+            result['followers'].forEach(follower => {
+                if (follower['id'] == hostUserID){
+                    followBtn.innerHTML = `Following <span class="material-icons md-15">done</span>`; 
+                    followBtn.disabled = true; // unable to follow more than once
+                } 
+            });
+        }
+
 
     })
 
@@ -130,6 +124,23 @@ async function createUserProfile(target){
     const userTimelineBtn = document.querySelector('#user-profile-popup__timeline-btn');
     userTimelineBtn.addEventListener('click', () => {
         window.location.href = `/${target.innerText}`; // get the username of event.target then redirect to /username/ url
+    })
+
+    // get csrf token to attach to request
+    const csrftoken = Cookies.get('csrftoken');
+    // listen for event following
+    followBtn.addEventListener('click', () =>{
+        fetch(`/users/${targetUserID}/follow/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            }
+        })
+        .then(data =>{
+            followBtn.innerHTML = `Following <span class="material-icons md-15">done</span>`; 
+            followBtn.disabled = true; // unable to follow more than once
+        })
     })
 }
 
