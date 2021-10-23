@@ -82,6 +82,10 @@ function hideUserProfilePopup(){
 
     userProfilePopup.classList.remove('user-profile-popup--active');
     overlay.style.display = 'none';
+    const followBtn = document.querySelector('.follow-btn');
+    followBtn.innerHTML = 'Follow'; // re-set 'Follow' as default
+    followBtn.disabled = false;
+
 }
 
 async function createUserProfile(target){
