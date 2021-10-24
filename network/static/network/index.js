@@ -1,4 +1,4 @@
-import {getPosts, fetchHostUser} from './utils.js';
+import {getPosts, perform_follow, fetchHostUser} from './utils.js';
 
 const allPostContainer = document.querySelector('.all-posts');
 const overlay = document.querySelector('.overlay');
@@ -11,6 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
     newPostForm.addEventListener('submit', handleNewPost);
     allPostContainer.addEventListener('click', showUserProfilePopup);
     overlay.addEventListener('click', hideUserProfilePopup);
+    const response = fetchHostUser();
+    response.then(
+        data => {
+            sessionStorage.setItem('user_id', data[0]['id']);
+        }
+    )
+
 });
 
 
@@ -26,21 +33,18 @@ allPost = querySelector('.all-post');
 allPost.innerHTML = postsList.map(post, i) => renderPost()       <---- reassign allPost.innerHTML
 */
 
-async function handleNewPost(e){
+function handleNewPost(e){
     e.preventDefault();
     //console.log(e.target);
-
-    // TODO: consider if keep userID in global scope
-    const response = await fetchHostUser();
-    const userID = response[0]['id'];
+    const host_user_id = sessionStorage.getItem('user_id');
 
     // get csrf token to attach to request
     const csrftoken = Cookies.get('csrftoken');
-    fetch(`/users/${userID}/posts/`,{
+    fetch(`/users/${host_user_id}/posts/`,{
         method: 'POST',
         body: JSON.stringify({
             "content": document.querySelector('#new-post__body').value,
-            "publisher": userID,
+            "publisher": host_user_id,
         }),
         headers: {
             'Content-Type': 'application/json',
@@ -73,7 +77,7 @@ function showUserProfilePopup(e){
     userProfilePopup.classList.add('user-profile-popup--active');
     overlay.style.display = 'block';
 
-    createUserProfile(target);
+    createUserProfilePopup(target);
 
 }
 
@@ -88,21 +92,20 @@ function hideUserProfilePopup(){
 
 }
 
-async function createUserProfile(target){
+function createUserProfilePopup(target){
     // target: DOM element that triggered the event
     const username = document.querySelector('#user-profile-popup__username');
     const followers_count = document.querySelector('#user-profile-popup__followers');
     const following_count = document.querySelector('#user-profile-popup__following');
     const posts_count = document.querySelector('#user-profile-popup__num_of_posts');
 
-    let targetUserID = target.dataset.userid;
+    const target_user_id = target.dataset.userid;
+    const host_user_id = sessionStorage.getItem('user_id');
 
-    const response = await fetchHostUser();
-    const hostUserID = response[0]['id'];
     const followBtn = document.querySelector('.follow-btn');
     followBtn.style.display = 'inline-block'; // set the default display
 
-    fetch(`/users/${targetUserID}`)
+    fetch(`/users/${target_user_id}`)
     .then(response => response.json())
     .then(result => {
 
@@ -111,10 +114,10 @@ async function createUserProfile(target){
         following_count.innerHTML = `<span style="font-weight:bold">${result['following_count']}</span> following`;
         posts_count.innerHTML = `<span style="font-weight:bold">${result['posts_count']}</span> posts`;
 
-        if (hostUserID == targetUserID) followBtn.style.display = 'none';   // unable to follow yourself
+        if (host_user_id == target_user_id) followBtn.style.display = 'none';   // unable to follow yourself
         else {
             result['followers'].forEach(follower => {
-                if (follower['id'] == hostUserID){
+                if (follower['id'] == host_user_id){
                     followBtn.innerHTML = `Following <span class="material-icons md-15">done</span>`; 
                     followBtn.disabled = true; // unable to follow more than once
                 } 
@@ -134,17 +137,7 @@ async function createUserProfile(target){
     const csrftoken = Cookies.get('csrftoken');
     // listen for event following
     followBtn.addEventListener('click', () =>{
-        fetch(`/users/${targetUserID}/follow/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            }
-        })
-        .then(data =>{
-            followBtn.innerHTML = `Following <span class="material-icons md-15">done</span>`; 
-            followBtn.disabled = true; // unable to follow more than once
-        })
+        perform_follow(followBtn, targetUserID);
     })
 }
 

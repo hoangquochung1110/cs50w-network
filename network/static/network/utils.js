@@ -125,4 +125,21 @@ function update_post(e){
     const postContainer = document.querySelector(`.all-posts div[data-id="${e.target.parentNode.dataset.id}"]`);
     console.log(postContainer);
 }
-export {getPosts, fetchHostUser};
+
+function perform_follow(button, user_id){
+    // get csrf token to attach to request
+    const csrftoken = Cookies.get('csrftoken');
+    fetch(`/users/${user_id}/follow/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        }
+    })
+    .then(data =>{
+        button.innerHTML = `Following <span class="material-icons md-15">done</span>`; 
+    })
+}
+
+
+export {getPosts, fetchHostUser, perform_follow};
