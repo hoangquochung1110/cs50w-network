@@ -1,4 +1,4 @@
-import {getPosts, perform_follow} from "./utils.js"
+import {getPosts, perform_follow, perform_unfollow} from "./utils.js"
 
 const visited_user_id = JSON.parse(document.querySelector('#visited_user_id').textContent);
 const visited_user_followers = JSON.parse(document.querySelector('#visited_user_followers').textContent);
@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     createUserProfileHeader();
     followBtn.addEventListener('click', function(){
         perform_follow(followBtn, visited_user_id);
+        dropdown_on();
     })
 });
 
@@ -22,28 +23,39 @@ function createUserProfileHeader(){
         visited_user_followers.forEach(follower => {
             if(follower['id'] == host_user_id){
                 followBtn.innerHTML = `Following <span class="material-icons md-15">done</span>`;
-                // const dropdown = document.querySelector('.dropdown'); // turn on hover effect
-                // dropdown.classList.remove('un-hoverable'); // hover effect set none as default
+                dropdown_on();
             }
         })
     }
 
     // Listen for unfollow event
+    const unfollow = document.querySelector('.dropdown-content a');
+    if (unfollow){
+        unfollow.addEventListener('click', () => {
+            perform_unfollow(followBtn, visited_user_id);
+            dropdown_off();
+        })
+    }
 }   
 
-function perform_unfollow(visited_user_id){
-    const csrftoken = Cookies.get('csrftoken');
-
-    fetch(
-        `/users/${visited_user_id}/unfollow/`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            }
-        }
-    )
-    .then(response => {
-        followBtn.innerHTML = 'Follow';
-    })
+function dropdown_on(){
+    const dropdown = document.querySelector('.dropdown'); // turn on hover effect
+    dropdown.prepend(followBtn);
 }
+
+function dropdown_off(){
+    const userProfileUsername = document.querySelector('#user-profile-header__username');
+    userProfileUsername.after(followBtn);
+}
+/*
+NOT FOLLOWING: 
+    follow-btn.innerHTML = 'follow';
+    allow to click but hover effect disabled
+    listen for event follow
+
+
+FOLLOWING:
+    follow-btn.innerHTML = 'following';
+    hover effect allowed but click disabled
+    listen for event unfollow
+*/

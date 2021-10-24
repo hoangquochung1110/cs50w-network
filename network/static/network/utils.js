@@ -1,8 +1,4 @@
 
-function sayHello () {
-    console.log('say hello');
-}
-
 function getPosts(request_url, container){
     fetch(request_url)
     .then(response => response.json())
@@ -141,5 +137,20 @@ function perform_follow(button, user_id){
     })
 }
 
+function perform_unfollow(button, user_id){
+    const csrftoken = Cookies.get('csrftoken');
 
-export {getPosts, fetchHostUser, perform_follow};
+    fetch(
+        `/users/${user_id}/unfollow/`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            }
+        }
+    )
+    .then(response => {
+        button.innerHTML = 'Follow';
+    })
+}
+export {getPosts, fetchHostUser, perform_follow, perform_unfollow};

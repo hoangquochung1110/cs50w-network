@@ -6,9 +6,19 @@
         <header id="user-profile-header">
             <div class="row">
                 <div id="user-profile-header__username">{{visited_user.username}}</div>
-                {% if user.id != visited_user.id %}
                 <button class="follow-btn">Follow</button>
-                {% endif %}
+
+                <div class="dropdown">
+                    <div class="dropdown-content">
+                        <a>Unfollow</a>
+                    </div>
+                </div>
+                <!--
+                <button class="follow-btn">Follow</button>
+
+                -->
+
+                
             </div>
 
             <div class="row">
@@ -23,8 +33,11 @@
         <main>
             <div class='user-posts'>
                 {{ visited_user.id|json_script:"visited_user_id" }}
+                {{ visited_user_followers|json_script:"visited_user_followers" }}
+
             </div>
         </main>
+        
     </div>
 
     <script src="{% static 'network/timeline.js' %}" type="module"></script>

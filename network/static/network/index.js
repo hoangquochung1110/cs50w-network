@@ -133,11 +133,10 @@ function createUserProfilePopup(target){
         window.location.href = `/${target.innerText}`; // get the username of event.target then redirect to /username/ url
     })
 
-    // get csrf token to attach to request
-    const csrftoken = Cookies.get('csrftoken');
+
     // listen for event following
     followBtn.addEventListener('click', () =>{
-        perform_follow(followBtn, targetUserID);
+        perform_follow(followBtn, target_user_id);
     })
 }
 
