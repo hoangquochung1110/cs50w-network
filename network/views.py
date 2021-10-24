@@ -14,6 +14,9 @@ from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerial
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .permissions import FollowOthersOnly
+import json
+from rest_framework.renderers import JSONRenderer
+
 
 def index(request):
     return render(request, "network/index.html")
@@ -72,9 +75,9 @@ def register(request):
 
 
 def timeline(request, username):
-    user = get_object_or_404(User, username=username)
-    print(request.user)
-    return render(request, 'network/timeline.html', {'visited_user': user})
+    visited_user = get_object_or_404(User, username=username)
+    serializer =  ReadUserSerializer(visited_user.followers.all(), many=True)
+    return render(request, 'network/timeline.html', {'visited_user': visited_user, 'visited_user_followers': serializer.data})
 
 
 class PublicPostListView(mixins.ListModelMixin,
@@ -122,6 +125,7 @@ class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
         'update': ReadUserSerializer,
         'destroy': ReadUserSerializer,
         'follow': None,
+        'unfollow': None,
     }
 
     def get_queryset(self):
@@ -136,3 +140,12 @@ class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
         visited_user.followers.add(request.user)
         response_serializer = ReadUserSerializer(instance=request.user)
         return Response(response_serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def unfollow(self, request, pk):
+        visited_user = self.get_object()
+        request.user.following.remove(visited_user)
+        request.user.save()
+        response_serializer = ReadUserSerializer(instance=request.user)
+        return Response(response_serializer.data)
+

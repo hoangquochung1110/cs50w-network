@@ -13,7 +13,7 @@ from .views import PostViewSet, UserViewSet, PublicPostListView, index, register
 # users_router.register(r'posts', PostViewSet, basename='user-posts')
 
 router = routers.SimpleRouter()
-router.register(r'users', UserViewSet)
+router.register(r'users', UserViewSet, basename='users')
 router.register(r'posts', PublicPostListView)
 
 users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
