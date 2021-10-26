@@ -1,7 +1,7 @@
 
 from django.urls import path, include
 from rest_framework_nested import routers
-from .views import PostViewSet, UserViewSet, PublicPostListView, index, register, login_view, logout_view, timeline
+from .views import PostViewSet, UserViewSet, PublicPostListView, FollowingPostListView,index, register, login_view, logout_view, timeline, following_posts
 
 # router = routers.SimpleRouter()
 # router.register('users', UserViewSet)
@@ -15,6 +15,7 @@ from .views import PostViewSet, UserViewSet, PublicPostListView, index, register
 router = routers.SimpleRouter()
 router.register(r'users', UserViewSet, basename='users')
 router.register(r'posts', PublicPostListView)
+router.register(r'posts/following', FollowingPostListView)
 
 users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
 users_router.register(r'posts', PostViewSet, basename='user-posts')
@@ -31,6 +32,7 @@ urlpatterns = [
     path("login", login_view, name="login"),
     path("logout", logout_view, name="logout"),
     path("register", register, name="register"),
+    path("following-post", following_posts, name="following"),
     path("<str:username>", timeline, name="timeline"),
 
     path(r'', include(router.urls)),

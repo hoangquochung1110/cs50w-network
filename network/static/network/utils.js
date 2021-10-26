@@ -123,7 +123,7 @@ function createNewPost(e){
     })
     .then(response => response.json())
     .then(result => {
-        getPosts('/posts/', allPostContainer);
+        getPosts('/posts/', allPostsContainer);
     })
     .catch((error) => {
         console.error('Error: ', error);

@@ -2,12 +2,22 @@ import {getPosts, performFollow, getHostUser, createNewPost} from './utils.js';
 
 const is_authenticated = JSON.parse(document.querySelector("#request_user_is_authenticated").textContent);
 
-const allPostContainer = document.querySelector('.all-posts');
+const allPostsContainer = document.querySelector('.all-posts');
+const followingPostsContainer = document.querySelector('.following-posts');
 const overlay = document.querySelector('.overlay');
 const userProfilePopup = document.querySelector('.user-profile-popup');
 
 document.addEventListener('DOMContentLoaded', function() {
-    getPosts('/posts/', allPostContainer);
+    if (allPostsContainer){
+        getPosts('/posts/', allPostsContainer);
+        allPostsContainer.addEventListener('click', showUserProfilePopup);
+    } else if (followingPostsContainer){
+        getPosts('posts/following/', followingPostsContainer);
+        followingPostsContainer.addEventListener('click', showUserProfilePopup);
+    } else{
+        throw new Error('Can not load page at the moment')
+    }
+
     if (is_authenticated){
         const response = getHostUser();
         response.then(
@@ -17,11 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
         )
         const newPostForm = document.querySelector('#new-post__form');
         newPostForm.addEventListener('submit', createNewPost);
-        allPostContainer.addEventListener('click', showUserProfilePopup);
         overlay.addEventListener('click', hideUserProfilePopup);
-
     }
-
 
 });
 

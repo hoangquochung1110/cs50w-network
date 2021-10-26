@@ -42,8 +42,11 @@
                     </form>
                 </div>
                 {% endif %}
-
-                <div class="all-posts"></div>
+                {% if following_posts %}
+                    <div class="following-posts"></div>
+                {% else %}
+                    <div class="all-posts"></div>
+                {% endif %}
             </div>
 
             <div class="col-3">

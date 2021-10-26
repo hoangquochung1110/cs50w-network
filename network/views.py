@@ -78,17 +78,32 @@ def register(request):
 def timeline(request, username):
     visited_user = get_object_or_404(User, username=username)
     serializer =  ReadUserSerializer(visited_user.followers.all(), many=True)
-    return render(request, 'network/timeline.html', {'visited_user': visited_user, 'visited_user_followers': serializer.data})
+    return render(request, 'network/timeline.html', context={'visited_user': visited_user, 'visited_user_followers': serializer.data})
 
 
-class PublicPostListView(mixins.ListModelMixin,
-                   GenericViewSet):
+def following_posts(request):
+    return render(request, 'network/index.html', context={'following_posts': True})
+
+
+class PublicPostListView(mixins.ListModelMixin, GenericViewSet):
     """
     A View for get list of all posts of all users
     """
     permission_classes = [AllowAny,]
     queryset = Post.objects.order_by('-published')
     serializer_class = ReadPostSerializer
+
+
+class FollowingPostListView(mixins.ListModelMixin, GenericViewSet):
+    """
+    A View for getting list of posts which a given user is following
+    """
+    queryset = Post.objects.none()
+    permission_classes = [IsAuthenticated,]
+    serializer_class = ReadPostSerializer
+
+    def get_queryset(self):
+        return Post.objects.filter(publisher__followers=self.request.user).order_by('-published')
 
 
 class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
