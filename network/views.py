@@ -93,6 +93,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'partial_update': WritePostSerializer,
         'update': WritePostSerializer,
         'destroy': ReadPostSerializer,
+        'like': None,
     }
 
     def get_permissions(self):
@@ -103,6 +104,14 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         else:
             permission_classes = [IsAuthenticated, ]
         return [permission() for permission in permission_classes]
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk):
+        post = Post.objects.get(pk=pk)
+        post.like += 1
+        post.save()
+        response_serializer = ReadPostSerializer(instance=post)
+        return Response(response_serializer.data)
 
 
 class FollowingPostListView(mixins.ListModelMixin, GenericViewSet):

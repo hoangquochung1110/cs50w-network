@@ -14,8 +14,8 @@ from .views import NestedPostViewSet, UserViewSet, PostViewSet, FollowingPostLis
 
 router = routers.SimpleRouter()
 router.register(r'users', UserViewSet, basename='users')
+router.register(r'posts/following', FollowingPostListView) # this url pattern should lie at the second highest order
 router.register(r'posts', PostViewSet)
-router.register(r'posts/following', FollowingPostListView)
 
 users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
 users_router.register(r'posts', NestedPostViewSet, basename='user-posts')
