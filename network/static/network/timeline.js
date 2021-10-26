@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getPosts(`/users/${visited_user_id}/posts/`, userPostsContainer);
     createUserProfileHeader();
     followBtn.addEventListener('click', function(){
-        perform_follow(followBtn, visited_user_id);
+        performFollow(followBtn, visited_user_id);
         dropdown_on();
     })
 });
@@ -32,7 +32,7 @@ function createUserProfileHeader(){
     const unfollow = document.querySelector('.dropdown-content a');
     if (unfollow){
         unfollow.addEventListener('click', () => {
-            perform_unfollow(followBtn, visited_user_id);
+            performUnfollow(followBtn, visited_user_id);
             dropdown_off();
         })
     }
