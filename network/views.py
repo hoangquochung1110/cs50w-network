@@ -6,7 +6,7 @@ from django.urls import reverse
 from rest_framework import viewsets, mixins, status
 from rest_framework import permissions
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from django.shortcuts import get_object_or_404
 from .mixins import GetSerializerClassMixin, GetPermissionClassMixin
@@ -15,9 +15,8 @@ from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerial
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 from .permissions import FollowOthersOnly
-import json
 from rest_framework.renderers import JSONRenderer
-
+from .permissions import IsOwner
 
 def index(request):
     return render(request, "network/index.html")
@@ -85,13 +84,25 @@ def following_posts(request):
     return render(request, 'network/index.html', context={'following_posts': True})
 
 
-class PublicPostListView(mixins.ListModelMixin, GenericViewSet):
-    """
-    A View for get list of all posts of all users
-    """
-    permission_classes = [AllowAny,]
-    queryset = Post.objects.order_by('-published')
-    serializer_class = ReadPostSerializer
+class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
+    queryset = Post.objects.order_by('-creation_date')
+    serializer_action_classes = {
+        'list': ReadPostSerializer,
+        'create': WritePostSerializer,
+        'retrieve': ReadPostSerializer,
+        'partial_update': WritePostSerializer,
+        'update': WritePostSerializer,
+        'destroy': ReadPostSerializer,
+    }
+
+    def get_permissions(self):
+        if self.action == 'update' or self.action == 'partial_update':
+            permission_classes = [IsOwner, ]
+        elif self.action == 'list':
+            permission_classes = [AllowAny,]
+        else:
+            permission_classes = [IsAuthenticated, ]
+        return [permission() for permission in permission_classes]
 
 
 class FollowingPostListView(mixins.ListModelMixin, GenericViewSet):
@@ -103,16 +114,16 @@ class FollowingPostListView(mixins.ListModelMixin, GenericViewSet):
     serializer_class = ReadPostSerializer
 
     def get_queryset(self):
-        return Post.objects.filter(publisher__followers=self.request.user).order_by('-published')
+        return Post.objects.filter(publisher__followers=self.request.user).order_by('-creation_date')
 
 
-class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
+class NestedPostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     """
     This view is nested in UserViewSet
     """
     queryset = Post.objects.all()
     serializer_class = ReadPostSerializer
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [AllowAny,]
     serializer_action_classes = {
         'list': ReadPostSerializer,
         'create': WritePostSerializer,
@@ -126,7 +137,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         publisher_id = self.kwargs['user_pk']
         queryset = Post.objects.filter(publisher_id=publisher_id)
         if self.action == 'list':
-            return queryset.order_by('-published')
+            return queryset.order_by('-creation_date')
         return queryset
 
 

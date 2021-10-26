@@ -35,29 +35,21 @@ document.addEventListener('DOMContentLoaded', function() {
 function showUserProfilePopup(e){
     // function to render a pop-up user profile card and handle overlay effect
 
-    let target = e.target;
-
     // event delegation
-    if (target.className != 'post__poster'){
+    if (e.target.className != 'post__poster'){
         return; // Skip if the trigger DOM element is not post__poster
     }
-
     // make user-profile-popup overlap container
     userProfilePopup.classList.add('user-profile-popup--active');
     overlay.style.display = 'block';
-
-    createUserProfilePopup(target);
+    createUserProfilePopup(e.target);
 
 }
 
 function hideUserProfilePopup(){
     // function to hide a pop-up user profile card
-
     userProfilePopup.classList.remove('user-profile-popup--active');
     overlay.style.display = 'none';
-    const followBtn = document.querySelector('.follow-btn');
-    followBtn.innerHTML = 'Follow'; // re-set 'Follow' as default
-    followBtn.disabled = false;
 
 }
 

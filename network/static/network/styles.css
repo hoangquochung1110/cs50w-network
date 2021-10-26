@@ -2,6 +2,7 @@
     --new-post-color: #4E9EED;
     --section-breaker-color: #D6D1D1;
     --hover-color: #D4cece;    ;
+    --edit-post-color: #778899;
 
 }
 
@@ -46,18 +47,33 @@ html {
     font-size: .9em;
 }
 
-#new-post {
+#new-post, .edit-post {
     min-height: 9em;
-    border: 5px solid var(--new-post-color);
     margin-bottom: 2em;
 }
 
-#new-post__form {
+#new-post {
+    border: 5px solid var(--new-post-color);
+}
+
+.edit-post{
+    position: absolute;
+    border: 5px solid var(--edit-post-color);
+    transition: 200ms ease-in-out;
+	transform: scale(0); /* scale to 0 makes this view (still exists but) invisible */
+    z-index: 3;
+    background-color: white;
+    width: 510px;
+    left: 25%;
+	top: 40%;
+}
+
+#new-post__form, #edit-post__form {
     margin: 0.5em;
     width: 98%;
 }
 
-#new-post__share-btn {
+#new-post__share-btn, #edit-post_btn {
     background-color: var(--new-post-color);
     outline: none !important;
     border: none !important;
@@ -66,6 +82,11 @@ html {
 }
 
 #new-post__form > textarea {
+    width: inherit;
+    height: 5em;
+}
+
+#edit-post__form > textarea {
     width: inherit;
     height: 5em;
 }

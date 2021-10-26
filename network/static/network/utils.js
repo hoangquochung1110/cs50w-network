@@ -57,7 +57,7 @@ function createPostHeader(item, headerContainer){
 
     // render button to edit the post if current user owns this post
     const host_user_id = sessionStorage.getItem('user_id')
-    if (host_user_id!= null && host_user_id==item['publisher'['id']]){
+    if (host_user_id!= null && host_user_id==item['publisher']['id']){
         const editBtn = document.createElement('button');
         editBtn.className = 'post__edit-btn';
         editBtn.dataset.id = item['id'];
@@ -78,7 +78,7 @@ function createPostBody(item, bodyContainer){
 
     const postTimestamp = document.createElement('div');
     postTimestamp.className = 'post__timestamp';
-    postTimestamp.innerHTML = localizeDatetime(item['published']);
+    postTimestamp.innerHTML = localizeDatetime(item['creation_date']);
 
     [postContent, postTimestamp].forEach(element => bodyContainer.appendChild(element));
 }
@@ -123,7 +123,7 @@ function createNewPost(e){
     })
     .then(response => response.json())
     .then(result => {
-        getPosts('/posts/', allPostsContainer);
+        window.location.href = `/`;
     })
     .catch((error) => {
         console.error('Error: ', error);
@@ -134,10 +134,50 @@ function createNewPost(e){
 }
 
 function updatePost(e){
-    console.log(e.target.parentNode.dataset.id);
+    // handle popup effect
+    const editForm = document.querySelector('.edit-post');
+    const overlay = document.querySelector('.overlay');
+    editForm.classList.add('user-profile-popup--active');
+    overlay.style.display = 'block';
+
+    const postID = e.target.parentNode.dataset.id
     const editBtn = e.target.parentNode;
-    const postContainer = document.querySelector(`.all-posts div[data-id="${e.target.parentNode.dataset.id}"]`);
+    const postContainer = document.querySelector(`.all-posts div[data-id="${postID}"]`);
     console.log(postContainer);
+    const original_content = postContainer.querySelector('.post__content').innerHTML;
+
+    const editFormBody = editForm.querySelector('#edit-post__body');
+    editFormBody.innerHTML = original_content;
+
+    const editFormBtn = editForm.querySelector('#edit-post__btn');
+
+    const csrftoken = Cookies.get('csrftoken');
+    const user_id = sessionStorage.getItem('user_id');
+
+    editFormBtn.addEventListener('click', () => {
+        fetch(`/posts/${postID}/`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                "content": editFormBody.value,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+        })
+        .catch((error) => {
+            console.error('Error: ', error);
+        });
+    
+        // clear input
+        this.reset();
+
+    })
+
 }
 
 function performFollow(button, user_id){
@@ -171,4 +211,6 @@ function performUnfollow(button, user_id){
         button.innerHTML = 'Follow';
     })
 }
+
+
 export {getPosts, getHostUser, performFollow, performUnfollow, createNewPost};

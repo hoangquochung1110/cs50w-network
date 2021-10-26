@@ -41,7 +41,7 @@ class ReadPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'content', 'publisher', 'published', 'like']
+        fields = ['id', 'content', 'publisher', 'creation_date', 'like']
 
 
 class WritePostSerializer(serializers.ModelSerializer):
