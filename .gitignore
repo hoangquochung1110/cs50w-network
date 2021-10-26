@@ -134,3 +134,6 @@ dmypy.json
 # PyCharm
 *idea*
 *DS_Store*
+
+# Visual Code
+*.vscode/
