@@ -1,4 +1,4 @@
-import {getPosts, perform_follow, perform_unfollow} from "./utils.js"
+import {getPosts, performFollow, performUnfollow} from "./utils.js"
 
 const visited_user_id = JSON.parse(document.querySelector('#visited_user_id').textContent);
 const visited_user_followers = JSON.parse(document.querySelector('#visited_user_followers').textContent);

@@ -1,4 +1,4 @@
-import {getPosts, perform_follow, fetchHostUser} from './utils.js';
+import {getPosts, performFollow, getHostUser, createNewPost} from './utils.js';
 
 const is_authenticated = JSON.parse(document.querySelector("#request_user_is_authenticated").textContent);
 
@@ -9,14 +9,14 @@ const userProfilePopup = document.querySelector('.user-profile-popup');
 document.addEventListener('DOMContentLoaded', function() {
     getPosts('/posts/', allPostContainer);
     if (is_authenticated){
-        const response = fetchHostUser();
+        const response = getHostUser();
         response.then(
             data => {
                 sessionStorage.setItem('user_id', data[0]['id']);
             }
         )
         const newPostForm = document.querySelector('#new-post__form');
-        newPostForm.addEventListener('submit', handleNewPost);
+        newPostForm.addEventListener('submit', createNewPost);
         allPostContainer.addEventListener('click', showUserProfilePopup);
         overlay.addEventListener('click', hideUserProfilePopup);
 
@@ -24,49 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
-
-
-
-
-
-
-/*
-TODO: HANDLE DUPLICATE ITEMS
-postsList = fetch('/posts/'); // get new, updated list of posts
-
-allPost = querySelector('.all-post');
-allPost.innerHTML = postsList.map(post, i) => renderPost()       <---- reassign allPost.innerHTML
-*/
-
-function handleNewPost(e){
-    e.preventDefault();
-    //console.log(e.target);
-    const host_user_id = sessionStorage.getItem('user_id');
-
-    // get csrf token to attach to request
-    const csrftoken = Cookies.get('csrftoken');
-    fetch(`/users/${host_user_id}/posts/`,{
-        method: 'POST',
-        body: JSON.stringify({
-            "content": document.querySelector('#new-post__body').value,
-            "publisher": host_user_id,
-        }),
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-        }
-    })
-    .then(response => response.json())
-    .then(result => {
-        getPosts('/posts/', allPostContainer);
-    })
-    .catch((error) => {
-        console.error('Error: ', error);
-    });
-
-    // clear input
-    this.reset();
-}
 
 function showUserProfilePopup(e){
     // function to render a pop-up user profile card and handle overlay effect
@@ -141,7 +98,7 @@ function createUserProfilePopup(target){
 
     // listen for event following
     followBtn.addEventListener('click', () =>{
-        perform_follow(followBtn, target_user_id);
+        performFollow(followBtn, target_user_id);
     })
 }
 

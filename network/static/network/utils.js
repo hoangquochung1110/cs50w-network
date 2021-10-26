@@ -8,7 +8,7 @@ function getPosts(request_url, container){
     })
 }
 
-async function fetchHostUser(){
+async function getHostUser(){
     // get data of the currently signed in user
     const response = await fetch('http://127.0.0.1:8000/users/');
     const result = await response.json();
@@ -63,7 +63,7 @@ function createPostHeader(item, headerContainer){
         editBtn.dataset.id = item['id'];
         editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>`
         editBtn.title = 'Edit Post';
-        editBtn.addEventListener('click', update_post);
+        editBtn.addEventListener('click', updatePost);
         [poster, editBtn].forEach(element => headerContainer.appendChild(element));
     } else{
         headerContainer.appendChild(poster);
@@ -78,7 +78,7 @@ function createPostBody(item, bodyContainer){
 
     const postTimestamp = document.createElement('div');
     postTimestamp.className = 'post__timestamp';
-    postTimestamp.innerHTML = localize_datetime(item['published']);
+    postTimestamp.innerHTML = localizeDatetime(item['published']);
 
     [postContent, postTimestamp].forEach(element => bodyContainer.appendChild(element));
 }
@@ -96,7 +96,7 @@ function createPostFooter(item, footerContainer){
     [likeBtn, likes].forEach(element => footerContainer.appendChild(element))
 }
 
-function localize_datetime(dt){
+function localizeDatetime(dt){
     // get UTC datetime from server, convert to user's local time
     // dt: String
     // desired format: /date/ + /time/
@@ -104,14 +104,43 @@ function localize_datetime(dt){
     return local_dt.toLocaleString();
 }
 
-function update_post(e){
+function createNewPost(e){
+    e.preventDefault();
+    const host_user_id = sessionStorage.getItem('user_id');
+
+    // get csrf token to attach to request
+    const csrftoken = Cookies.get('csrftoken');
+    fetch(`/users/${host_user_id}/posts/`,{
+        method: 'POST',
+        body: JSON.stringify({
+            "content": document.querySelector('#new-post__body').value,
+            "publisher": host_user_id,
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        }
+    })
+    .then(response => response.json())
+    .then(result => {
+        getPosts('/posts/', allPostContainer);
+    })
+    .catch((error) => {
+        console.error('Error: ', error);
+    });
+
+    // clear input
+    this.reset();
+}
+
+function updatePost(e){
     console.log(e.target.parentNode.dataset.id);
     const editBtn = e.target.parentNode;
     const postContainer = document.querySelector(`.all-posts div[data-id="${e.target.parentNode.dataset.id}"]`);
     console.log(postContainer);
 }
 
-function perform_follow(button, user_id){
+function performFollow(button, user_id){
     // get csrf token to attach to request
     const csrftoken = Cookies.get('csrftoken');
     fetch(`/users/${user_id}/follow/`, {
@@ -126,7 +155,7 @@ function perform_follow(button, user_id){
     })
 }
 
-function perform_unfollow(button, user_id){
+function performUnfollow(button, user_id){
     const csrftoken = Cookies.get('csrftoken');
 
     fetch(
@@ -142,4 +171,4 @@ function perform_unfollow(button, user_id){
         button.innerHTML = 'Follow';
     })
 }
-export {getPosts, fetchHostUser, perform_follow, perform_unfollow};
+export {getPosts, getHostUser, performFollow, performUnfollow, createNewPost};
