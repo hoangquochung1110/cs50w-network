@@ -1,22 +1,27 @@
 import {getPosts, perform_follow, fetchHostUser} from './utils.js';
 
+const is_authenticated = JSON.parse(document.querySelector("#request_user_is_authenticated").textContent);
+
 const allPostContainer = document.querySelector('.all-posts');
 const overlay = document.querySelector('.overlay');
 const userProfilePopup = document.querySelector('.user-profile-popup');
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    const newPostForm = document.querySelector('#new-post__form');
     getPosts('/posts/', allPostContainer);
-    newPostForm.addEventListener('submit', handleNewPost);
-    allPostContainer.addEventListener('click', showUserProfilePopup);
-    overlay.addEventListener('click', hideUserProfilePopup);
-    const response = fetchHostUser();
-    response.then(
-        data => {
-            sessionStorage.setItem('user_id', data[0]['id']);
-        }
-    )
+    if (is_authenticated){
+        const response = fetchHostUser();
+        response.then(
+            data => {
+                sessionStorage.setItem('user_id', data[0]['id']);
+            }
+        )
+        const newPostForm = document.querySelector('#new-post__form');
+        newPostForm.addEventListener('submit', handleNewPost);
+        allPostContainer.addEventListener('click', showUserProfilePopup);
+        overlay.addEventListener('click', hideUserProfilePopup);
+
+    }
+
 
 });
 

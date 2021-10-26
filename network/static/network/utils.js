@@ -16,49 +16,37 @@ async function fetchHostUser(){
 }
 
 function populatePost(item, parentContainer){
-    // TODO: refactor params to reuse the func -> Add a param named ParentContainer. ParentContainer can be 'all-posts' or 'user-x-posts'
-    //
-    //    console.log(item)
-        /*
-            parentContainer
-                postContainer
-                    headerContainer
-                    contentContainer
-                    footerContainer
+
+    // create headContainer that has 2 child elements: poster and editBtn
+    const headerContainer = document.createElement('div');
+    headerContainer.className = 'post__header';
+    createPostHeader(item, headerContainer);
+
+    // create bodyContainer that has 2 child elements: content and timestamp
+    const bodyContainer = document.createElement('div');
+    bodyContainer.className = 'post__body';
+    createPostBody(item, bodyContainer);
+
+    // create footerContainer that has 2 child elements: likeBtn and likes
+    const footerContainer = document.createElement('div');
+    footerContainer.className = 'post__footer';
+    createPostFooter(item, footerContainer);
+
+    // create postContainer that have 3 child elements: headerContainer, bodyContainer and footerContainer
+    //const postContainer = document.createElement('div');
+    let postContainer = document.createElement('div');
+    postContainer.className = 'post';
+    postContainer.dataset.id = item['id']; // assign post id to div `post` for CRUD purposes
+    [headerContainer, bodyContainer, footerContainer].forEach(element => postContainer.appendChild(element));
+
+    parentContainer.appendChild(postContainer);
     
-        */
+}
     
-        // create headContainer that has 2 child elements: poster and editBtn
-        const headerContainer = document.createElement('div');
-        headerContainer.className = 'post__header';
-        createPostHeader(item, headerContainer);
-    
-        // create bodyContainer that has 2 child elements: content and timestamp
-        const bodyContainer = document.createElement('div');
-        bodyContainer.className = 'post__body';
-        createPostBody(item, bodyContainer);
-    
-        // create footerContainer that has 2 child elements: likeBtn and likes
-        const footerContainer = document.createElement('div');
-        footerContainer.className = 'post__footer';
-        createPostFooter(item, footerContainer);
-    
-        // create postContainer that have 3 child elements: headerContainer, bodyContainer and footerContainer
-        //const postContainer = document.createElement('div');
-        let postContainer = document.createElement('div');
-        postContainer.className = 'post';
-        postContainer.dataset.id = item['id']; // assign post id to div `post` for CRUD purposes
-        [headerContainer, bodyContainer, footerContainer].forEach(element => postContainer.appendChild(element));
-    
-        parentContainer.appendChild(postContainer);
-    
-    }
-    
-async function createPostHeader(item, headerContainer){
+function createPostHeader(item, headerContainer){
     // PostHead: an element container containing username, email address, timestamp and (optional) edit button
     // Verify if currently signed in user is the owner of the current post to construct the button
-    const response = await fetchHostUser();
-    const hostUserID = response[0]['id'];
+
 
     // render username, email address
     const poster = document.createElement('h6');
@@ -68,7 +56,8 @@ async function createPostHeader(item, headerContainer){
     poster.innerHTML = `${item['publisher']['username']}`;
 
     // render button to edit the post if current user owns this post
-    if (item['publisher']['id'] == hostUserID){
+    const host_user_id = sessionStorage.getItem('user_id')
+    if (host_user_id!= null && host_user_id==item['publisher'['id']]){
         const editBtn = document.createElement('button');
         editBtn.className = 'post__edit-btn';
         editBtn.dataset.id = item['id'];

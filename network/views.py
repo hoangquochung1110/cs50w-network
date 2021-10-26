@@ -4,14 +4,15 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from rest_framework import viewsets, mixins, status
+from rest_framework import permissions
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
 from django.shortcuts import get_object_or_404
 from .mixins import GetSerializerClassMixin, GetPermissionClassMixin
 from .models import User, Post
 from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 from .permissions import FollowOthersOnly
 import json
@@ -85,6 +86,7 @@ class PublicPostListView(mixins.ListModelMixin,
     """
     A View for get list of all posts of all users
     """
+    permission_classes = [AllowAny,]
     queryset = Post.objects.order_by('-published')
     serializer_class = ReadPostSerializer
 

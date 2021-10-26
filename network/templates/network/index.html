@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block body %}
-    {% if user.is_authenticated %}
     <div class="user-profile-popup">
         <div class="card mb-3">
             <div class="row g-0">
@@ -33,6 +32,7 @@
     <div class="container">
         <div class="row">
             <div class="col-9">
+                {% if user.is_authenticated %}
                 <div id="new-post">
                     <form id="new-post__form">
                         <textarea id="new-post__body" placeholder="Share your story with us !"></textarea>
@@ -41,6 +41,8 @@
                         </button>
                     </form>
                 </div>
+                {% endif %}
+
                 <div class="all-posts"></div>
             </div>
 
@@ -51,9 +53,8 @@
 
     <div class="overlay">
     </div>
+    {{user.is_authenticated|json_script:"request_user_is_authenticated"}}
 
-
-    {% endif %}
     <script src="{% static 'network/index.js' %}" type="module"></script>
 
 {% endblock %}
