@@ -171,6 +171,7 @@ class NestedPostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
+    pagination_class = None
 
     serializer_action_classes = {
         'list': ReadUserSerializer,
