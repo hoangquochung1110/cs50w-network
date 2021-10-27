@@ -4,7 +4,6 @@ function getPosts(request_url, container){
     fetch(request_url)
     .then(response => response.json())
     .then(posts => {
-        console.log(posts);
         container.innerHTML = ''; // clear .all-posts for every time reloading the page. Is there better way to handle this ?
         posts.forEach(post => populatePost(post, container))
     })
@@ -87,18 +86,24 @@ function createPostBody(item, bodyContainer){
 function createPostFooter(item, footerContainer){
     // create likeContainer that has 2 child elements: postLikeBtn and postLikes
     const likeBtn = document.createElement('button');
+    const host_user_id = sessionStorage.getItem('user_id');
+
     likeBtn.className = 'post__like-btn';
+    likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${item['like']}`;
     likeBtn.dataset.id = item['id'];
-    likeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16"><path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/></svg>`;
+    likeBtn.dataset.liked = 'false'; // default value
 
+    item['liked_by'].forEach(liker => {
+        if (liker['id'] == host_user_id) {
+            decorateLikeButton(likeBtn, 'false'); // warning: possible bug. Must test it later
+        }
+    })
+    likeBtn.addEventListener('click', (event) => {
+        decorateLikeButton(likeBtn, likeBtn.dataset.liked);
+        performLike(event);
+    });
 
-    const likes = document.createElement('div');
-    likes.className = 'post__likes';
-    likes.innerHTML = item['like'];
-
-    likeBtn.addEventListener('click', performLike);
-
-    [likeBtn, likes].forEach(element => footerContainer.appendChild(element))
+    footerContainer.appendChild(likeBtn);
 }
 
 function localizeDatetime(dt){
@@ -144,7 +149,6 @@ function updatePost(e){
     overlay.style.display = 'block';
 
     const postID = e.target.parentNode.dataset.id
-    const editBtn = e.target.parentNode;
     const postContainer = document.querySelector(`.all-posts div[data-id="${postID}"]`);
     console.log(postContainer);
     const original_content = postContainer.querySelector('.post__content').innerHTML;
@@ -153,8 +157,6 @@ function updatePost(e){
     editFormBody.innerHTML = original_content;
 
     const editFormBtn = editForm.querySelector('#edit-post__btn');
-
-    const user_id = sessionStorage.getItem('user_id');
 
     editFormBtn.addEventListener('click', () => {
         fetch(`/posts/${postID}/`, {
@@ -212,18 +214,43 @@ function performUnfollow(button, user_id){
     })
 }
 
-function performLike(e){
-    const postID = e.target.parentNode.dataset.id;
-    fetch(`/posts/${postID}/like/`, {
+function performLike(event){
+    const postID = event.target.parentNode.dataset.id;
+    const likeBtn = event.target.parentNode;
+    const liked = likeBtn.dataset.liked;
+    let request_url = '';
+
+    if(liked=='false'){
+        // perform unlike
+        request_url = `/posts/${postID}/unlike/`;
+    }else if(liked=='true'){
+        // perform like
+        request_url = `/posts/${postID}/like/`;
+    }
+    fetch(request_url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrftoken,
         }
     })
-    .then(response => {
-        window.location.href = '/';
+    .then(response => response.json())
+    .then(data => {
+        likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${data['like']}`;
+
     })
+}
+
+function decorateLikeButton(btn, liked){
+    if (liked=='true'){ 
+        // liked the post already
+        btn.classList.remove('like-btn-active');
+        btn.dataset.liked = 'false';
+    } else{
+        // not liking the post
+        btn.classList.add('like-btn-active');
+        btn.dataset.liked = 'true';
+    }
 }
 
 export {getPosts, getHostUser, performFollow, performUnfollow, createNewPost};

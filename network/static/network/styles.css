@@ -3,7 +3,7 @@
     --section-breaker-color: #D6D1D1;
     --hover-color: #D4cece;    ;
     --edit-post-color: #778899;
-
+    --like-button-color: #ff4d4d;
 }
 
 html {
@@ -38,7 +38,7 @@ html {
     float: right;
 }
 
-.post__likes {
+.post__like-count {
     display: inline;
 }
 
@@ -171,3 +171,7 @@ html {
 
 .dropdown:hover .dropdown-content{display: block;}
 .dropdown:hover .follow-btn{background-color: var(--hover-color);}
+
+.like-btn-active {
+    color: var(--like-button-color);
+}

@@ -94,6 +94,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'update': WritePostSerializer,
         'destroy': ReadPostSerializer,
         'like': None,
+        'unlike': None,
     }
 
     def get_permissions(self):
@@ -107,11 +108,28 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk):
-        post = Post.objects.get(pk=pk)
-        post.like += 1
-        post.save()
-        response_serializer = ReadPostSerializer(instance=post)
-        return Response(response_serializer.data)
+        post_obj = Post.objects.get(pk=pk)
+        liked = post_obj.liked_by.filter(id=request.user.id).exists()
+        if not liked:
+            post_obj.like += 1
+            post_obj.liked_by.add(request.user)
+            post_obj.save()
+            response_serializer = ReadPostSerializer(instance=post_obj)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'detail': 'user %s can not like the post more than once' % request.user}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk):
+        post_obj = Post.objects.get(pk=pk)
+        liked = post_obj.liked_by.filter(id=request.user.id).exists()
+        if liked:
+            post_obj.like -= 1
+            post_obj.liked_by.remove(request.user)
+            post_obj.save()
+            response_serializer = ReadPostSerializer(instance=post_obj)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'detail': 'user %s can not unlike the post without liking it first' % request.user}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class FollowingPostListView(mixins.ListModelMixin, GenericViewSet):

@@ -38,10 +38,11 @@ class ReadUserSerializer(serializers.ModelSerializer):
 
 class ReadPostSerializer(serializers.ModelSerializer):
     publisher = ReadUserSerializer()
-
+    liked_by = ReadUserSerializer(many=True)
+    
     class Meta:
         model = Post
-        fields = ['id', 'content', 'publisher', 'creation_date', 'like']
+        fields = ['id', 'content', 'publisher', 'creation_date', 'like', 'liked_by',]
 
 
 class WritePostSerializer(serializers.ModelSerializer):
