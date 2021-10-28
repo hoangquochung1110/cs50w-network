@@ -133,10 +133,13 @@ function createPostBody(item, bodyContainer){
     [postContent, postTimestamp].forEach(element => bodyContainer.appendChild(element));
 }
 function createPostFooter(item, footerContainer){
-    // create likeContainer that has 2 child elements: postLikeBtn and postLikes
+    // create likeContainer that has 1 child elements: postLikeBtn
     const likeBtn = document.createElement('button');
     const host_user_id = sessionStorage.getItem('user_id');
 
+    if (host_user_id != null){
+        likeBtn.disabled = true;
+    }
     likeBtn.className = 'post__like-btn';
     likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${item['like']}`;
     likeBtn.dataset.id = item['id'];

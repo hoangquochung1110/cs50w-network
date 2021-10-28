@@ -159,7 +159,6 @@ class NestedPostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'update': WritePostSerializer,
         'destroy': ReadPostSerializer,
     }
-    pagination_class = None
 
     def get_queryset(self):
         publisher_id = self.kwargs['user_pk']
@@ -190,6 +189,13 @@ class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
         if self.action == 'list':
             return queryset.filter(id=self.request.user.id)
         return queryset
+
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            permission_classes = [AllowAny, ]
+        else:
+            permission_classes = [IsAuthenticated, ]
+        return [permission() for permission in permission_classes]
 
     @action(detail=True, methods=['post'], permission_classes=[FollowOthersOnly,])
     def follow(self, request, pk):
