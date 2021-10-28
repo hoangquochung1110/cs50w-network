@@ -9,7 +9,7 @@ const followBtn = document.querySelector('.follow-btn');
 
 document.addEventListener('DOMContentLoaded', function() {
     const userPostsContainer = document.querySelector('.user-posts');
-    getPosts(`/users/${visited_user_id}/posts/`, userPostsContainer);
+    getPosts(`/users/${visited_user_id}/posts/`, 1, userPostsContainer);
     createUserProfileHeader();
     followBtn.addEventListener('click', function(){
         performFollow(followBtn, visited_user_id);
