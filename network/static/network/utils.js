@@ -3,9 +3,9 @@ const csrftoken = Cookies.get('csrftoken');
 function getPosts(request_url, container){
     fetch(request_url)
     .then(response => response.json())
-    .then(posts => {
+    .then(data => {
         container.innerHTML = ''; // clear .all-posts for every time reloading the page. Is there better way to handle this ?
-        posts.forEach(post => populatePost(post, container))
+        data['results'].forEach(post => populatePost(post, container))
     })
 }
 
@@ -215,11 +215,11 @@ function performUnfollow(button, user_id){
 }
 
 function performLike(event){
-    const postID = event.target.parentNode.dataset.id;
-    const likeBtn = event.target.parentNode;
+    const postID = event.target.dataset.id;
+    const likeBtn = event.target;
     const liked = likeBtn.dataset.liked;
     let request_url = '';
-
+    console.log(event.target, 'target');
     if(liked=='false'){
         // perform unlike
         request_url = `/posts/${postID}/unlike/`;
@@ -239,6 +239,7 @@ function performLike(event){
         likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${data['like']}`;
 
     })
+    console.log(likeBtn);
 }
 
 function decorateLikeButton(btn, liked){

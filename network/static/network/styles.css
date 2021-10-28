@@ -29,6 +29,10 @@ html {
     padding-left: 0px;
 }
 
+.post__like-btn span {
+    pointer-events: none;
+}
+
 .post__edit-btn {
     margin-left: 1em;
     outline: none !important;
