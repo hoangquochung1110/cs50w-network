@@ -159,6 +159,7 @@ class NestedPostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'update': WritePostSerializer,
         'destroy': ReadPostSerializer,
     }
+    pagination_class = None
 
     def get_queryset(self):
         publisher_id = self.kwargs['user_pk']

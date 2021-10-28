@@ -179,3 +179,11 @@ html {
 .like-btn-active {
     color: var(--like-button-color);
 }
+
+.page-nav {
+    justify-content: center;
+}
+
+.page-nav li {
+    margin: .5em;
+}

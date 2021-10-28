@@ -1,12 +1,61 @@
 const csrftoken = Cookies.get('csrftoken');
+const PAGESIZE = 10; // display 10 item per page
 
-function getPosts(request_url, container){
-    fetch(request_url)
+function getPosts(request_url, page, container){
+    fetch(request_url+`?page=${page}`)
     .then(response => response.json())
     .then(data => {
         container.innerHTML = ''; // clear .all-posts for every time reloading the page. Is there better way to handle this ?
+        paginatePosts(data, request_url, page, container);
         data['results'].forEach(post => populatePost(post, container))
     })
+}
+
+function paginatePosts(data, request_url, page, container){
+    /*
+    data: JSON response
+        PAGE 1: previous:null current:1 next:data['next']
+
+        PAGE 2: previous:data['previous'] current:2 next:data['next']
+
+        PAGE 3: previous:data['previous'] current:2 next:null
+    */
+    const pagination = document.querySelector('.pagination');
+    pagination.innerHTML = ''; // clear previous DOMs
+
+    if (data['previous'] != null){
+        const previous = document.createElement('li');
+        previous.classList.add('page-item'); // Bootstrap class
+
+        const previousLink = document.createElement('a');
+        previousLink.addEventListener('click', (e) =>{
+            getPosts(request_url, page-1,container);
+        })
+        previousLink.innerHTML = 'Previous';
+
+        previous.appendChild(previousLink);
+        pagination.appendChild(previous);
+    }
+
+    const ithPageItem = document.createElement('li');
+    ithPageItem.classList.add('page-item');
+    ithPageItem.innerHTML = `${page}`;
+    pagination.appendChild(ithPageItem);
+
+    if (data['next'] != null){
+        const next = document.createElement('li');
+        next.classList.add('page-item'); // Bootstrap class
+
+        const nextLink = document.createElement('a');
+        nextLink.addEventListener('click', (e) =>{
+            getPosts(request_url, page+1,container);
+        })
+        nextLink.innerHTML = 'Next';
+
+        next.appendChild(nextLink);
+        pagination.appendChild(next);
+    }
+    
 }
 
 async function getHostUser(){
@@ -215,9 +264,10 @@ function performUnfollow(button, user_id){
 }
 
 function performLike(event){
-    const postID = event.target.dataset.id;
     const likeBtn = event.target;
     const liked = likeBtn.dataset.liked;
+    const postID = likeBtn.dataset.id;
+
     let request_url = '';
     console.log(event.target, 'target');
     if(liked=='false'){
@@ -239,7 +289,6 @@ function performLike(event){
         likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${data['like']}`;
 
     })
-    console.log(likeBtn);
 }
 
 function decorateLikeButton(btn, liked){

@@ -9,10 +9,10 @@ const userProfilePopup = document.querySelector('.user-profile-popup');
 
 document.addEventListener('DOMContentLoaded', function() {
     if (allPostsContainer){
-        getPosts('/posts/', allPostsContainer);
+        getPosts('/posts/', 1, allPostsContainer);
         allPostsContainer.addEventListener('click', showUserProfilePopup);
     } else if (followingPostsContainer){
-        getPosts('posts/following/', followingPostsContainer);
+        getPosts('posts/following/', 1, followingPostsContainer);
         followingPostsContainer.addEventListener('click', showUserProfilePopup);
     } else{
         throw new Error('Can not load page at the moment')
