@@ -52,7 +52,8 @@
             </div>
         </div>
     </div>
-    {{user.is_authenticated|json_script:"request_user_is_authenticated"}}
+    {{request.session.user_id|json_script:"user_id"}}
+
     <script src="{% static 'network/index.js' %}" type="module"></script>
 
 {% endblock %}

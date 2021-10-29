@@ -32,9 +32,9 @@
 
         <main>
             <div class='user-posts'>
-                {{ visited_user.id|json_script:"visited_user_id" }}
-                {{ visited_user_followers|json_script:"visited_user_followers" }}
-
+                {{visited_user.id|json_script:"visited_user_id" }}
+                {{visited_user_followers|json_script:"visited_user_followers" }}
+                {{request.session.user_id|json_script:"user_id"}}
             </div>
         </main>
         

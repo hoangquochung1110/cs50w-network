@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -19,6 +20,8 @@ from rest_framework.renderers import JSONRenderer
 from .permissions import IsOwner
 
 def index(request):
+    if request.user.is_anonymous:
+        request.session['user_id'] = -1
     return render(request, "network/index.html")
 
 
@@ -33,12 +36,14 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
+            request.session['user_id'] = user.id
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "network/login.html", {
                 "message": "Invalid username and/or password."
             })
     else:
+
         return render(request, "network/login.html")
 
 

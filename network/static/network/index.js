@@ -1,12 +1,14 @@
 import {getPosts, performFollow, getHostUser, createNewPost} from './utils.js';
 
-const is_authenticated = JSON.parse(document.querySelector("#request_user_is_authenticated").textContent);
+const host_user_id = JSON.parse(document.querySelector("#user_id").textContent);
+
 const allPostsContainer = document.querySelector('.all-posts');
 const followingPostsContainer = document.querySelector('.following-posts');
 const overlay = document.querySelector('.overlay');
 const userProfilePopup = document.querySelector('.user-profile-popup');
 
 document.addEventListener('DOMContentLoaded', function() {
+
     if (allPostsContainer){
         getPosts('/posts/', 1, allPostsContainer);
         allPostsContainer.addEventListener('click', showUserProfilePopup);
@@ -17,13 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error('Can not load page at the moment')
     }
 
-    if (is_authenticated){
-        const response = getHostUser();
-        response.then(
-            data => {
-                sessionStorage.setItem('user_id', data[0]['id']);
-            }
-        )
+    if (host_user_id >= 0){ // user.is_authenticated == True
         const newPostForm = document.querySelector('#new-post__form');
         newPostForm.addEventListener('submit', createNewPost);
         overlay.addEventListener('click', hideUserProfilePopup);
@@ -60,7 +56,6 @@ function createUserProfilePopup(target){
     const posts_count = document.querySelector('#user-profile-popup__num_of_posts');
 
     const target_user_id = target.dataset.userid;
-    const host_user_id = sessionStorage.getItem('user_id');
 
     const followBtn = document.querySelector('.follow-btn');
     followBtn.style.display = 'inline-block'; // set the default display

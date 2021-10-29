@@ -1,5 +1,5 @@
 const csrftoken = Cookies.get('csrftoken');
-const PAGESIZE = 10; // display 10 item per page
+const host_user_id = JSON.parse(document.querySelector("#user_id").textContent);
 
 function getPosts(request_url, page, container){
     fetch(request_url+`?page=${page}`)
@@ -58,13 +58,6 @@ function paginatePosts(data, request_url, page, container){
     
 }
 
-async function getHostUser(){
-    // get data of the currently signed in user
-    const response = await fetch('http://127.0.0.1:8000/users/');
-    const result = await response.json();
-    return result
-}
-
 function populatePost(item, parentContainer){
 
     // create headContainer that has 2 child elements: poster and editBtn
@@ -106,8 +99,7 @@ function createPostHeader(item, headerContainer){
     poster.innerHTML = `${item['publisher']['username']}`;
 
     // render button to edit the post if current user owns this post
-    const host_user_id = sessionStorage.getItem('user_id')
-    if (host_user_id!= null && host_user_id==item['publisher']['id']){
+    if (host_user_id==item['publisher']['id']){
         const editBtn = document.createElement('button');
         editBtn.className = 'post__edit-btn';
         editBtn.dataset.id = item['id'];
@@ -135,9 +127,7 @@ function createPostBody(item, bodyContainer){
 function createPostFooter(item, footerContainer){
     // create likeContainer that has 1 child elements: postLikeBtn
     const likeBtn = document.createElement('button');
-    const host_user_id = sessionStorage.getItem('user_id');
-
-    if (host_user_id == null){
+    if (host_user_id == -1){    // user is anonymous
         likeBtn.disabled = true;
     }
     likeBtn.className = 'post__like-btn';
@@ -168,7 +158,6 @@ function localizeDatetime(dt){
 
 function createNewPost(e){
     e.preventDefault();
-    const host_user_id = sessionStorage.getItem('user_id');
 
     fetch(`/users/${host_user_id}/posts/`,{
         method: 'POST',
@@ -302,4 +291,4 @@ function decorateLikeButton(btn, liked){
     }
 }
 
-export {getPosts, getHostUser, performFollow, performUnfollow, createNewPost};
+export {getPosts, performFollow, performUnfollow, createNewPost};
