@@ -1,4 +1,4 @@
-import {getPosts, performFollow, getHostUser, createNewPost} from './utils.js';
+import {getPosts, performFollow, createNewPost} from './utils.js';
 
 const host_user_id = JSON.parse(document.querySelector("#user_id").textContent);
 
