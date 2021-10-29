@@ -29,13 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="edit-post">
-        <form id="edit-post__form">
-            <label>Edit Post</label>
-            <textarea id="edit-post__body"></textarea>
-            <button id="edit-post__btn">Save</button>
-        </form>
-    </div>
+
     <div class="container">
         <div class="row">
             <div class="col-9">
@@ -58,11 +52,7 @@
             </div>
         </div>
     </div>
-
-    <div class="overlay">
-    </div>
     {{user.is_authenticated|json_script:"request_user_is_authenticated"}}
-
     <script src="{% static 'network/index.js' %}" type="module"></script>
 
 {% endblock %}

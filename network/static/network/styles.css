@@ -33,6 +33,10 @@ html {
     pointer-events: none;
 }
 
+.post__edit-btn span {
+    pointer-events: none;
+}
+
 .post__edit-btn {
     margin-left: 1em;
     outline: none !important;

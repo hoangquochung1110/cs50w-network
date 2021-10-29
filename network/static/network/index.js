@@ -1,7 +1,6 @@
 import {getPosts, performFollow, getHostUser, createNewPost} from './utils.js';
 
 const is_authenticated = JSON.parse(document.querySelector("#request_user_is_authenticated").textContent);
-
 const allPostsContainer = document.querySelector('.all-posts');
 const followingPostsContainer = document.querySelector('.following-posts');
 const overlay = document.querySelector('.overlay');
