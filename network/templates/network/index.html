@@ -4,7 +4,7 @@
 {% block body %}
     <div class="user-profile-popup">
         <div class="card mb-3">
-            <div class="row g-0">
+            <div class="row g-0" style="align-items: center; margin-left: auto;">
                 <div class="col-md-4">
                     <img class="card-img-top user-profile__img" src="{% static 'network/user.png' %}" alt="Card image cap">
                 </div>
@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div id="user-profile-popup__title">
                             <div id="user-profile-popup__username"></div>
-                            <button id="user-profile-popup__timeline-btn">Timeline</button>
+                            <button class="timeline-btn">Timeline</button>
                             <button class="follow-btn">Follow</button>
         
                         </div>

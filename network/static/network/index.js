@@ -85,7 +85,7 @@ function createUserProfilePopup(target){
     })
 
     // listen for event clicking Timeline
-    const userTimelineBtn = document.querySelector('#user-profile-popup__timeline-btn');
+    const userTimelineBtn = document.querySelector('.timeline-btn');
     userTimelineBtn.addEventListener('click', () => {
         window.location.href = `/${target.innerText}`; // get the username of event.target then redirect to /username/ url
     })

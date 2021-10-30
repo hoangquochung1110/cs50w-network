@@ -22,6 +22,10 @@ html {
     margin-bottom: 1em;
 }
 
+.post__like-btn, .post__edit-btn, .follow-btn, .timeline-btn {
+    background-color: white;
+}
+
 .post__like-btn {
     outline: none !important;
     border: none;
@@ -94,17 +98,13 @@ html {
     height: 5em;
 }
 
-#edit-post__form > textarea {
-    width: inherit;
-    height: 5em;
-}
-
 #user-profile__img{
     transform: scale(0.5, 0.5);
+    margin-left: 1em;
 }
 
 .user-profile-popup{
-	position: absolute;
+	position: fixed;
     left: 35%;
 	top: 12%;
 	z-index: 3; /* greater stack order makes this view sit in front of overlay */
