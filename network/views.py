@@ -15,7 +15,7 @@ from .models import User, Post
 from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
-from .permissions import FollowOthersOnly
+from .permissions import FollowPermission
 from rest_framework.renderers import JSONRenderer
 from .permissions import IsOwner
 
@@ -177,7 +177,6 @@ class NestedPostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 
 class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
     queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
     pagination_class = None
 
     serializer_action_classes = {
@@ -191,20 +190,22 @@ class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
         'unfollow': None,
     }
 
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            permission_classes = [AllowAny, ]
+        elif self.action == 'follow':
+            permission_classes = [FollowPermission, ]
+        else:
+            permission_classes = [IsAuthenticated, ]
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
         queryset = self.queryset
         if self.action == 'list':
             return queryset.filter(id=self.request.user.id)
         return queryset
 
-    def get_permissions(self):
-        if self.action == 'retrieve':
-            permission_classes = [AllowAny, ]
-        else:
-            permission_classes = [IsAuthenticated, ]
-        return [permission() for permission in permission_classes]
-
-    @action(detail=True, methods=['post'], permission_classes=[FollowOthersOnly,])
+    @action(detail=True, methods=['post'])
     def follow(self, request, pk):
         visited_user = self.get_object()
         visited_user.followers.add(request.user)
