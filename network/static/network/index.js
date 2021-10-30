@@ -49,9 +49,9 @@ function hideUserProfilePopup(){
 function createUserProfilePopup(target){
     // target: DOM element that triggered the event
     const username = document.querySelector('#user-profile-popup__username');
-    const followers_count = document.querySelector('#user-profile-popup__followers');
-    const following_count = document.querySelector('#user-profile-popup__following');
-    const posts_count = document.querySelector('#user-profile-popup__num_of_posts');
+    const followers_count = document.querySelector('.followers-count');
+    const following_count = document.querySelector('.following-count');
+    const posts_count = document.querySelector('.posts-count');
 
     const target_user_id = target.dataset.userid;
 

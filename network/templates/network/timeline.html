@@ -22,9 +22,9 @@
             </div>
 
             <div class="row">
-                <div id="user-profile-header__followers">{{visited_user.followers_count}} Followers</div>
-                <div id="user-profile-header__following">{{visited_user.following_count}} Following</div>
-                <div id="user-profile-header__num_of_posts">{{visited_user.posts_count}} Posts</div>
+                <div class="followers-count">{{visited_user.followers_count}} Followers</div>
+                <div class="following-count">{{visited_user.following_count}} Following</div>
+                <div class="posts-count">{{visited_user.posts_count}} Posts</div>
             </div>
             <div><span style="font-weight:bold">{{visited_user.first_name}} {{visited_user.last_name}}</span></div>
             <div>Date joined: {{visited_user.date_joined.date}}</div>

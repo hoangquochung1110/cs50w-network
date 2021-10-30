@@ -227,8 +227,17 @@ function performFollow(button, user_id){
             'X-CSRFToken': csrftoken,
         }
     })
-    .then(data =>{
-        button.innerHTML = `Following <span class="material-icons md-15">done</span>`; 
+    .then(response => {
+        if(response.ok){
+            return response.json()
+        }else {
+            throw new Error('Sorry, something went wrong !');
+        }
+    })
+    .then(JSONResponse =>{
+        button.innerHTML = `Following <span class="material-icons md-15">done</span>`;
+        const followersCount = document.querySelector('.followers-count');
+        followersCount.innerHTML = `${JSONResponse['followers_count']} Followers`;
     })
 }
 
@@ -243,7 +252,16 @@ function performUnfollow(button, user_id){
         }
     )
     .then(response => {
+        if(response.ok){
+            return response.json()
+        }else {
+            throw new Error('Sorry, something went wrong !');
+        }
+    })
+    .then(JSONResponse => {
         button.innerHTML = 'Follow';
+        const followersCount = document.querySelector('.followers-count');
+        followersCount.innerHTML = `${JSONResponse['followers_count']} Followers`;
     })
 }
 
