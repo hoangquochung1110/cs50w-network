@@ -208,7 +208,7 @@ class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
     def follow(self, request, pk):
         visited_user = self.get_object()
         visited_user.followers.add(request.user)
-        response_serializer = ReadUserSerializer(instance=request.user)
+        response_serializer = ReadUserSerializer(instance=visited_user)
         return Response(response_serializer.data)
 
     @action(detail=True, methods=['post'])
@@ -216,6 +216,6 @@ class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
         visited_user = self.get_object()
         request.user.following.remove(visited_user)
         request.user.save()
-        response_serializer = ReadUserSerializer(instance=request.user)
+        response_serializer = ReadUserSerializer(instance=visited_user)
         return Response(response_serializer.data)
 
