@@ -2,8 +2,6 @@ import {getPosts, performFollow, performUnfollow} from "./utils.js"
 
 const visited_user_id = JSON.parse(document.querySelector('#visited_user_id').textContent);
 const visited_user_followers = JSON.parse(document.querySelector('#visited_user_followers').textContent);
-
-//const host_user_id = sessionStorage.getItem('user_id');
 const host_user_id = JSON.parse(document.querySelector("#user_id").textContent);
 
 const followBtn = document.querySelector('.follow-btn');
@@ -48,15 +46,3 @@ function dropdown_off(){
     const userProfileUsername = document.querySelector('#user-profile-header__username');
     userProfileUsername.after(followBtn);
 }
-/*
-NOT FOLLOWING: 
-    follow-btn.innerHTML = 'follow';
-    allow to click but hover effect disabled
-    listen for event follow
-
-
-FOLLOWING:
-    follow-btn.innerHTML = 'following';
-    hover effect allowed but click disabled
-    listen for event unfollow
-*/
