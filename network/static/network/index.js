@@ -38,14 +38,12 @@ function showUserProfilePopup(e){
     userProfilePopup.classList.add('user-profile-popup--active');
     overlay.style.display = 'block';
     createUserProfilePopup(e.target);
-
 }
 
-function hideUserProfilePopup(){
+function hideUserProfilePopup(){ 
     // function to hide a pop-up user profile card
     userProfilePopup.classList.remove('user-profile-popup--active');
     overlay.style.display = 'none';
-
 }
 
 function createUserProfilePopup(target){
@@ -63,7 +61,6 @@ function createUserProfilePopup(target){
     fetch(`/users/${target_user_id}`)
     .then(response => response.json())
     .then(result => {
-
         username.innerHTML = `<span style="font-weight:bold">${result['username']}</span>`;
         followers_count.innerHTML = `<span style="font-weight:bold">${result['followers_count']}</span> followers`;
         following_count.innerHTML = `<span style="font-weight:bold">${result['following_count']}</span> following`;
@@ -78,8 +75,6 @@ function createUserProfilePopup(target){
                 } 
             });
         }
-
-
     })
 
     // listen for event clicking Timeline
@@ -87,7 +82,6 @@ function createUserProfilePopup(target){
     userTimelineBtn.addEventListener('click', () => {
         window.location.href = `/${target.innerText}`; // get the username of event.target then redirect to /username/ url
     })
-
 
     // listen for event following
     followBtn.addEventListener('click', () =>{

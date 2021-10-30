@@ -3,22 +3,27 @@ const host_user_id = JSON.parse(document.querySelector("#user_id").textContent);
 
 function getPosts(request_url, page, container){
     fetch(request_url+`?page=${page}`)
-    .then(response => response.json())
+    .then(response => {
+        if(response.ok){
+            return response.json();
+        } else {
+            window.location.href = '/pagenotfound';
+            throw new Error('Sorry, something went wrong !');
+        }
+    })
     .then(data => {
         container.innerHTML = ''; // clear .all-posts for every time reloading the page. Is there better way to handle this ?
         paginatePosts(data, request_url, page, container);
         data['results'].forEach(post => populatePost(post, container))
     })
+    .catch((error) => {
+        console.error('Error: ', error);
+    });
 }
 
 function paginatePosts(data, request_url, page, container){
     /*
     data: JSON response
-        PAGE 1: previous:null current:1 next:data['next']
-
-        PAGE 2: previous:data['previous'] current:2 next:data['next']
-
-        PAGE 3: previous:data['previous'] current:2 next:null
     */
     const pagination = document.querySelector('.pagination');
     pagination.innerHTML = ''; // clear previous DOMs
@@ -59,7 +64,6 @@ function paginatePosts(data, request_url, page, container){
 }
 
 function populatePost(item, parentContainer){
-
     // create headContainer that has 2 child elements: poster and editBtn
     const headerContainer = document.createElement('div');
     headerContainer.className = 'post__header';
@@ -85,17 +89,14 @@ function populatePost(item, parentContainer){
     parentContainer.appendChild(postContainer);
     
 }
-    
+
 function createPostHeader(item, headerContainer){
     // PostHead: an element container containing username, email address, timestamp and (optional) edit button
     // Verify if currently signed in user is the owner of the current post to construct the button
-
-
     // render username, email address
     const poster = document.createElement('h6');
     poster.dataset.userid = item['publisher']['id'];
     poster.className = 'post__poster';
-    //poster.style.display = 'inline';
     poster.innerHTML = `${item['publisher']['username']}`;
 
     // render button to edit the post if current user owns this post
@@ -111,7 +112,7 @@ function createPostHeader(item, headerContainer){
         headerContainer.appendChild(poster);
     }
 }
-    
+
 function createPostBody(item, bodyContainer){
     // create content text of the post
     const postContent = document.createElement('div');
@@ -124,6 +125,7 @@ function createPostBody(item, bodyContainer){
 
     [postContent, postTimestamp].forEach(element => bodyContainer.appendChild(element));
 }
+
 function createPostFooter(item, footerContainer){
     // create likeContainer that has 1 child elements: postLikeBtn
     const likeBtn = document.createElement('button');
@@ -149,9 +151,8 @@ function createPostFooter(item, footerContainer){
 }
 
 function localizeDatetime(dt){
-    // get UTC datetime from server, convert to user's local time
     // dt: String
-    // desired format: /date/ + /time/
+    // get UTC datetime from server, convert to user's local time. Returned format: /date/ + /time/
     let local_dt = new Date(dt);
     return local_dt.toLocaleString();
 }
@@ -170,9 +171,10 @@ function createNewPost(e){
             'X-CSRFToken': csrftoken,
         }
     })
-    .then(response => response.json())
-    .then(result => {
-        window.location.href = `/`;
+    .then(response => {
+        if(response.ok){
+            window.location.href = `/`;
+        }
     })
     .catch((error) => {
         console.error('Error: ', error);
@@ -210,15 +212,10 @@ function updatePost(e){
                 'X-CSRFToken': csrftoken,
             }
         })
-        .then(response => response.json())
-        .then(result => {
-            console.log(result);
-        })
         .catch((error) => {
             console.error('Error: ', error);
         });
     })
-
 }
 
 function performFollow(button, user_id){
@@ -236,7 +233,6 @@ function performFollow(button, user_id){
 }
 
 function performUnfollow(button, user_id){
-
     fetch(
         `/users/${user_id}/unfollow/`,{
             method: 'POST',
@@ -258,11 +254,9 @@ function performLike(event){
 
     let request_url = '';
     console.log(event.target, 'target');
-    if(liked=='false'){
-        // perform unlike
+    if(liked=='false'){ // perform unlike
         request_url = `/posts/${postID}/unlike/`;
-    }else if(liked=='true'){
-        // perform like
+    }else if(liked=='true'){ // perform like
         request_url = `/posts/${postID}/like/`;
     }
     fetch(request_url, {
@@ -275,7 +269,6 @@ function performLike(event){
     .then(response => response.json())
     .then(data => {
         likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${data['like']}`;
-
     })
 }
 

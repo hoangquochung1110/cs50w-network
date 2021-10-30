@@ -24,6 +24,8 @@ def index(request):
         request.session['user_id'] = -1
     return render(request, "network/index.html")
 
+def page_not_found(request):
+    return render(request, 'network/notfound.html')
 
 def login_view(request):
     if request.method == "POST":
