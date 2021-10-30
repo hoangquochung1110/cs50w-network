@@ -271,7 +271,6 @@ function performLike(event){
     const postID = likeBtn.dataset.id;
 
     let request_url = '';
-    console.log(event.target, 'target');
     if(liked=='false'){ // perform unlike
         request_url = `/posts/${postID}/unlike/`;
     }else if(liked=='true'){ // perform like
@@ -284,9 +283,11 @@ function performLike(event){
             'X-CSRFToken': csrftoken,
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${data['like']}`;
+    .then(response => {
+        if(response.ok) return response.json()
+    })
+    .then(JSONResponse => {
+        likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${JSONResponse['like']}`;
     })
 }
 
