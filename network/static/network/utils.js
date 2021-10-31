@@ -185,6 +185,7 @@ function createNewPost(e){
 }
 
 function updatePost(e){
+    e.preventDefault();
     // handle popup effect
     console.log(e.target);
     const editForm = document.querySelector('.edit-post');
@@ -201,7 +202,7 @@ function updatePost(e){
 
     const editFormBtn = editForm.querySelector('#edit-post__btn');
 
-    editFormBtn.addEventListener('click', () => {
+    editFormBtn.addEventListener('click', (e) => {
         fetch(`/posts/${postID}/`, {
             method: 'PATCH',
             body: JSON.stringify({
@@ -212,10 +213,20 @@ function updatePost(e){
                 'X-CSRFToken': csrftoken,
             }
         })
+        .then(response => {
+            if(response.ok) return response.json();
+        })
+        .then(JSONResponse => {
+            postContainer.querySelector('.post__content').innerHTML = `${JSONResponse['content']}`;
+        })
         .catch((error) => {
             console.error('Error: ', error);
         });
+        editForm.classList.remove('user-profile-popup--active');
+        overlay.style.display = 'none';
+        e.preventDefault();
     })
+
 }
 
 function performFollow(button, user_id){
