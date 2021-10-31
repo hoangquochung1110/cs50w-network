@@ -98,6 +98,11 @@ html {
     height: 5em;
 }
 
+#edit-post__body {
+    width: inherit;
+    height: 5em;
+}
+
 #user-profile__img{
     transform: scale(0.5, 0.5);
     margin-left: 1em;
