@@ -22,11 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error('Can not load page at the moment')
     }
 
-    if (host_user_id >= ANONYMOUSUSER){ // user.is_authenticated == True
+    if (host_user_id > ANONYMOUSUSER){ // user.is_authenticated == True
         const newPostForm = document.querySelector('#new-post__form');
         newPostForm.addEventListener('submit', createNewPost);
-        overlay.addEventListener('click', hideUserProfilePopup);
     }
+    overlay.addEventListener('click', hideUserProfilePopup);
+
 
 });
 
