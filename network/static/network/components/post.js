@@ -16,8 +16,10 @@ function getPosts(request_url, page, container){
     })
     .then(data => {
         container.innerHTML = ''; // clear .all-posts for every time reloading the page. Is there better way to handle this ?
-        console.log(data);
-        paginatePosts(data, request_url, page, container);
+
+        if(data.count > 10){ // do pagination with more than 10 posts
+            paginatePosts(data, request_url, page, container);
+        }
         data['results'].forEach(post => populatePost(post, container))
     })
     .catch((error) => {
@@ -115,7 +117,6 @@ function createPostFooter(item, footerContainer){
 function createNewPost(e){
     e.preventDefault();
     console.log(e);
-    debugger;
     fetch(`/users/${host_user_id}/posts/`,{
         method: 'POST',
         body: JSON.stringify({
