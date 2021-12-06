@@ -1,5 +1,8 @@
+import { performLike } from '../features/like.js';
+
 const csrftoken = Cookies.get('csrftoken');
 const host_user_id = JSON.parse(document.querySelector("#user_id").textContent);
+
 
 function getPosts(request_url, page, container){
     fetch(request_url+`?page=${page}`)
@@ -13,54 +16,13 @@ function getPosts(request_url, page, container){
     })
     .then(data => {
         container.innerHTML = ''; // clear .all-posts for every time reloading the page. Is there better way to handle this ?
+        console.log(data);
         paginatePosts(data, request_url, page, container);
         data['results'].forEach(post => populatePost(post, container))
     })
     .catch((error) => {
         console.error('Error: ', error);
     });
-}
-
-function paginatePosts(data, request_url, page, container){
-    /*
-    data: JSON response
-    */
-    const pagination = document.querySelector('.pagination');
-    pagination.innerHTML = ''; // clear previous DOMs
-
-    if (data['previous'] != null){
-        const previous = document.createElement('li');
-        previous.classList.add('page-item'); // Bootstrap class
-
-        const previousLink = document.createElement('a');
-        previousLink.addEventListener('click', (e) =>{
-            getPosts(request_url, page-1,container);
-        })
-        previousLink.innerHTML = 'Previous';
-
-        previous.appendChild(previousLink);
-        pagination.appendChild(previous);
-    }
-
-    const ithPageItem = document.createElement('li');
-    ithPageItem.classList.add('page-item');
-    ithPageItem.innerHTML = `${page}`;
-    pagination.appendChild(ithPageItem);
-
-    if (data['next'] != null){
-        const next = document.createElement('li');
-        next.classList.add('page-item'); // Bootstrap class
-
-        const nextLink = document.createElement('a');
-        nextLink.addEventListener('click', (e) =>{
-            getPosts(request_url, page+1,container);
-        })
-        nextLink.innerHTML = 'Next';
-
-        next.appendChild(nextLink);
-        pagination.appendChild(next);
-    }
-    
 }
 
 function populatePost(item, parentContainer){
@@ -150,16 +112,10 @@ function createPostFooter(item, footerContainer){
     footerContainer.appendChild(likeBtn);
 }
 
-function localizeDatetime(dt){
-    // dt: String
-    // get UTC datetime from server, convert to user's local time. Returned format: /date/ + /time/
-    let local_dt = new Date(dt);
-    return local_dt.toLocaleString();
-}
-
 function createNewPost(e){
     e.preventDefault();
-
+    console.log(e);
+    debugger;
     fetch(`/users/${host_user_id}/posts/`,{
         method: 'POST',
         body: JSON.stringify({
@@ -187,7 +143,7 @@ function createNewPost(e){
 function updatePost(e){
     e.preventDefault();
     // handle popup effect
-    console.log(e.target);
+    console.log(e.target.parentElement.parentElement);
     const editForm = document.querySelector('.edit-post');
     const overlay = document.querySelector('.overlay');
     editForm.classList.add('user-profile-popup--active');
@@ -195,6 +151,7 @@ function updatePost(e){
 
     const postID = e.target.dataset.id;
     const postContainer = document.querySelector(`.post[data-id="${postID}"]`);
+    //const postContainer = e.target.parentElement.parentElement;
     const original_content = postContainer.querySelector('.post__content').innerHTML;
 
     const editFormBody = editForm.querySelector('#edit-post__body');
@@ -224,82 +181,48 @@ function updatePost(e){
         });
         editForm.classList.remove('user-profile-popup--active');
         overlay.style.display = 'none';
-        e.preventDefault();
-    })
-
-}
-
-function performFollow(button, user_id){
-    // get csrf token to attach to request
-    fetch(`/users/${user_id}/follow/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-        }
-    })
-    .then(response => {
-        if(response.ok){
-            return response.json()
-        }else {
-            throw new Error('Sorry, something went wrong !');
-        }
-    })
-    .then(JSONResponse =>{
-        button.innerHTML = `Following <span class="material-icons md-15">done</span>`;
-        const followersCount = document.querySelector('.followers-count');
-        followersCount.innerHTML = `${JSONResponse['followers_count']} Followers`;
     })
 }
 
-function performUnfollow(button, user_id){
-    fetch(
-        `/users/${user_id}/unfollow/`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            }
-        }
-    )
-    .then(response => {
-        if(response.ok){
-            return response.json()
-        }else {
-            throw new Error('Sorry, something went wrong !');
-        }
-    })
-    .then(JSONResponse => {
-        button.innerHTML = 'Follow';
-        const followersCount = document.querySelector('.followers-count');
-        followersCount.innerHTML = `${JSONResponse['followers_count']} Followers`;
-    })
-}
+function paginatePosts(data, request_url, page, container){
+    /*
+    data: JSON response
+    */
+    const pagination = document.querySelector('.pagination');
+    pagination.innerHTML = ''; // clear previous DOMs
 
-function performLike(event){
-    const likeBtn = event.target;
-    const liked = likeBtn.dataset.liked;
-    const postID = likeBtn.dataset.id;
+    if (data['previous'] != null){
+        const previous = document.createElement('li');
+        previous.classList.add('page-item'); // Bootstrap class
 
-    let request_url = '';
-    if(liked=='false'){ // perform unlike
-        request_url = `/posts/${postID}/unlike/`;
-    }else if(liked=='true'){ // perform like
-        request_url = `/posts/${postID}/like/`;
+        const previousLink = document.createElement('a');
+        previousLink.addEventListener('click', (e) =>{
+            getPosts(request_url, page-1,container);
+        })
+        previousLink.innerHTML = 'Previous';
+
+        previous.appendChild(previousLink);
+        pagination.appendChild(previous);
     }
-    fetch(request_url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-        }
-    })
-    .then(response => {
-        if(response.ok) return response.json()
-    })
-    .then(JSONResponse => {
-        likeBtn.innerHTML = `<span class="material-icons md-15">favorite</span>${JSONResponse['like']}`;
-    })
+
+    const ithPageItem = document.createElement('li');
+    ithPageItem.classList.add('page-item');
+    ithPageItem.innerHTML = `${page}`;
+    pagination.appendChild(ithPageItem);
+
+    if (data['next'] != null){
+        const next = document.createElement('li');
+        next.classList.add('page-item'); // Bootstrap class
+
+        const nextLink = document.createElement('a');
+        nextLink.addEventListener('click', (e) =>{
+            getPosts(request_url, page+1,container);
+        })
+        nextLink.innerHTML = 'Next';
+
+        next.appendChild(nextLink);
+        pagination.appendChild(next);
+    }
 }
 
 function decorateLikeButton(btn, liked){
@@ -314,4 +237,11 @@ function decorateLikeButton(btn, liked){
     }
 }
 
-export {getPosts, performFollow, performUnfollow, createNewPost};
+function localizeDatetime(dt){
+    // dt: String
+    // get UTC datetime from server, convert to user's local time. Returned format: /date/ + /time/
+    let local_dt = new Date(dt);
+    return local_dt.toLocaleString();
+}
+
+export { createNewPost, getPosts};
