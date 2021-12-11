@@ -1,23 +1,20 @@
-import re
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from rest_framework import viewsets, mixins, status
-from rest_framework import permissions
-from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from django.shortcuts import get_object_or_404
 from .mixins import GetSerializerClassMixin, GetPermissionClassMixin
 from .models import User, Post
 from .serializers import ReadPostSerializer, ReadUserSerializer, WritePostSerializer
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from .permissions import FollowPermission
-from rest_framework.renderers import JSONRenderer
-from .permissions import IsOwner
+from .permissions import FollowPermission, IsOwner
+from .filters import UserFilter
+from django_filters import rest_framework as filters
 
 def index(request):
     if request.user.is_anonymous:
@@ -178,6 +175,8 @@ class NestedPostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
     queryset = User.objects.all()
     pagination_class = None
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = UserFilter
 
     serializer_action_classes = {
         'list': ReadUserSerializer,
@@ -201,8 +200,8 @@ class UserViewSet(GetSerializerClassMixin,viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        if self.action == 'list':
-            return queryset.filter(id=self.request.user.id)
+        # if self.action == 'list':
+        #     return queryset.filter(id=self.request.user.id)
         return queryset
 
     @action(detail=True, methods=['post'])
