@@ -202,3 +202,52 @@ html {
     width: 100%;
     z-index: 1;
 }
+
+.navbar {
+    height: 3rem;
+}
+
+.navbar-nav{
+    flex-direction: row;
+    align-items: center;
+    column-gap: .5rem;
+}
+
+.search-form{
+    width: 200px;
+}
+
+.search {
+    width: 100%;
+}
+.suggestions{
+    list-style: none;
+    position: absolute;
+    z-index: 2;
+    background-color: white;
+    width: 200px;
+    padding: 0;
+    border-radius: 6px;
+    box-shadow:
+        2.4px 2.6px 2.7px rgba(0, 0, 0, 0.057),
+        6px 6.5px 6.9px rgba(0, 0, 0, 0.069),
+        12.2px 13.3px 14.2px rgba(0, 0, 0, 0.074),
+        25.2px 27.4px 29.2px rgba(0, 0, 0, 0.078),
+        69px 75px 80px rgba(0, 0, 0, 0.08)
+    ; 
+}
+
+.suggestions li {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 4px;
+}
+
+.suggestions li:hover{
+    background-color: #e5e4e3;
+}
+
+a, a:hover, a:focus, a:active {
+    text-decoration: none !important;
+    color: inherit;
+}
