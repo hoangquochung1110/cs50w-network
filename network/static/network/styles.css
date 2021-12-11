@@ -196,3 +196,9 @@ html {
 .page-nav li {
     margin: .5em;
 }
+
+.fixed-nav {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}
