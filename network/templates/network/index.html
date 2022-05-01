@@ -1,4 +1,4 @@
-{% extends "network/layout.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block body %}
@@ -14,7 +14,7 @@
                             <div id="user-profile-popup__username"></div>
                             <button class="timeline-btn">Timeline</button>
                             <button class="follow-btn">Follow</button>
-        
+
                         </div>
                         <!--
                         <p id="user-profile__email-address"></p>
@@ -57,4 +57,3 @@
     <script src="{% static 'network/index.js' %}" type="module"></script>
 
 {% endblock %}
-

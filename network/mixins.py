@@ -1,6 +1,6 @@
 class GetSerializerClassMixin(object):
     """
-    A class which inhertis this mixins should have variable
+    A class which inherits this mixins should have variable
     `serializer_action_classes`.
     """
 
@@ -32,8 +32,5 @@ class PermissionsPerMethodMixin(object):
         """
         view = getattr(self, self.action)
         if hasattr(view, "permission_classes"):
-            return [
-                permission_class()
-                for permission_class in view.permission_classes
-            ]
+            return [permission_class() for permission_class in view.permission_classes]
         return super().get_permissions()

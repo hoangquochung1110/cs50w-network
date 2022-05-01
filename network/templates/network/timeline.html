@@ -1,4 +1,4 @@
-{% extends "network/layout.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block body %}
@@ -18,7 +18,7 @@
 
                 -->
 
-                
+
             </div>
 
             <div class="row">
@@ -37,7 +37,7 @@
                 {{request.session.user_id|json_script:"user_id"}}
             </div>
         </main>
-        
+
     </div>
 
     <script src="{% static 'network/timeline.js' %}" type="module"></script>

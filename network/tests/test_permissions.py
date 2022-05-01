@@ -24,16 +24,12 @@ class IsOwnerTest(TestCase):
 
     def test_is_owner_true(self):
         self.assertTrue(
-            self.permission.has_object_permission(
-                self.request, self.view, self.post_1
-            )
+            self.permission.has_object_permission(self.request, self.view, self.post_1)
         )
 
     def test_is_owner_false(self):
         self.assertFalse(
-            self.permission.has_object_permission(
-                self.request, self.view, self.post_2
-            )
+            self.permission.has_object_permission(self.request, self.view, self.post_2)
         )
 
 

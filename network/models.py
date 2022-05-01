@@ -18,9 +18,7 @@ class User(AbstractUser):
         "self", related_name="following", symmetrical=False, blank=True
     )
     age = models.SmallIntegerField(help_text="How old are you ?", default=0)
-    gender = models.CharField(
-        max_length=10, choices=GENDER_CHOICES, default=NOT_GIVEN
-    )
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default=NOT_GIVEN)
 
     def __str__(self):
         return f"{self.username}"

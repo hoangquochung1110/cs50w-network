@@ -100,9 +100,7 @@ def timeline(request, username):
 
 
 def following_posts(request):
-    return render(
-        request, "network/index.html", context={"following_posts": True}
-    )
+    return render(request, "network/index.html", context={"following_posts": True})
 
 
 class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
@@ -142,14 +140,9 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             post_obj.liked_by.add(request.user)
             post_obj.save()
             response_serializer = ReadPostSerializer(instance=post_obj)
-            return Response(
-                response_serializer.data, status=status.HTTP_201_CREATED
-            )
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(
-            {
-                "detail": "user %s can not like the post more than once"
-                % request.user
-            },
+            {"detail": "user %s can not like the post more than once" % request.user},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
@@ -162,9 +155,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             post_obj.liked_by.remove(request.user)
             post_obj.save()
             response_serializer = ReadPostSerializer(instance=post_obj)
-            return Response(
-                response_serializer.data, status=status.HTTP_201_CREATED
-            )
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(
             {
                 "detail": "user %s can not unlike the post without liking it first"
@@ -186,9 +177,9 @@ class FollowingPostListView(mixins.ListModelMixin, GenericViewSet):
     serializer_class = ReadPostSerializer
 
     def get_queryset(self):
-        return Post.objects.filter(
-            publisher__followers=self.request.user
-        ).order_by("-creation_date")
+        return Post.objects.filter(publisher__followers=self.request.user).order_by(
+            "-creation_date"
+        )
 
 
 class NestedPostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):

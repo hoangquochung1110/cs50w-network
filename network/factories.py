@@ -16,6 +16,4 @@ class PostFactory(factory.django.DjangoModelFactory):
         model = Post
 
     content = factory.Faker("sentence", nb_words=10)
-    creation_date = factory.Faker(
-        "date_time", tzinfo=timezone.get_current_timezone()
-    )
+    creation_date = factory.Faker("date_time", tzinfo=timezone.get_current_timezone())
