@@ -13,3 +13,5 @@ pre-commit==2.18.1
 pylint==2.13.7
 black-22.3.0
 invoke-1.7.0
+rich
+flake8
