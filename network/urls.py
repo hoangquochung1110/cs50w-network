@@ -1,6 +1,6 @@
-
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework_nested import routers
+
 from network import views
 
 # router = routers.SimpleRouter()
@@ -13,18 +13,18 @@ from network import views
 # users_router.register(r'posts', NestedPostViewSet, basename='user-posts')
 
 router = routers.SimpleRouter()
-router.register(r'users', views.UserViewSet, basename='users')
-router.register(r'posts/following', views.FollowingPostListView) # this url pattern should lie at the second highest order
-router.register(r'posts', views.PostViewSet)
+router.register(r"users", views.UserViewSet, basename="users")
+router.register(
+    r"posts/following", views.FollowingPostListView
+)  # this url pattern should lie at the second highest order
+router.register(r"posts", views.PostViewSet)
 
-users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
-users_router.register(r'posts', views.NestedPostViewSet, basename='user-posts')
+users_router = routers.NestedSimpleRouter(router, r"users", lookup="user")
+users_router.register(r"posts", views.NestedPostViewSet, basename="user-posts")
 # 'basename' is optional. Needed only if the same viewset is registered more than once
-# Official DRF docs on this option: http://www.django-rest-framework.org/api-guide/routers/
+# docs on this option: http://www.django-rest-framework.org/api-guide/routers/
 
-urlpatterns = [
-
-]
+urlpatterns = []
 
 
 urlpatterns = [
@@ -35,8 +35,6 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("following-post", views.following_posts, name="following"),
     path("<str:username>", views.timeline, name="timeline"),
-
-    path(r'', include(router.urls)),
-    path(r'', include(users_router.urls)),
-
+    path(r"", include(router.urls)),
+    path(r"", include(users_router.urls)),
 ]

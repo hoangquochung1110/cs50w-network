@@ -7,9 +7,10 @@ class FollowSerializer(serializers.ModelSerializer):
     """
     Store public information on a specific user
     """
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'age', 'gender']
+        fields = ["id", "username", "age", "gender"]
 
 
 class ReadUserSerializer(serializers.ModelSerializer):
@@ -19,37 +20,45 @@ class ReadUserSerializer(serializers.ModelSerializer):
     following_count = serializers.IntegerField(read_only=True)
     followers_count = serializers.IntegerField(read_only=True)
     posts_count = serializers.IntegerField(read_only=True)
-    
+
     class Meta:
         model = User
         fields = [
-            'id',
-            'username',
-            'email',
-            'age',
-            'gender',
-            'followers',
-            'following',
-            'followers_count',
-            'following_count',
-            'posts_count'
+            "id",
+            "username",
+            "email",
+            "age",
+            "gender",
+            "followers",
+            "following",
+            "followers_count",
+            "following_count",
+            "posts_count",
         ]
 
 
 class ReadPostSerializer(serializers.ModelSerializer):
     publisher = ReadUserSerializer()
     liked_by = ReadUserSerializer(many=True)
-    
+
     class Meta:
         model = Post
-        fields = ['id', 'content', 'publisher', 'creation_date', 'like', 'liked_by',]
+        fields = [
+            "id",
+            "content",
+            "publisher",
+            "creation_date",
+            "like",
+            "liked_by",
+        ]
 
 
 class WritePostSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Post
-        fields = ['content', ]
+        fields = [
+            "content",
+        ]
 
     def create(self, validated_data):
         publisher = User.objects.get(pk=self.context["view"].kwargs["user_pk"])

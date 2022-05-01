@@ -2,6 +2,12 @@
 
 ## My demo of the network project, a Twitter-like social website that allows users to make posts, follow other users, and “like” posts.
 
+## Set up
+pre-commit set up
+```
+pre-commit install
+```
+
 ## Main features:
 * New Post
 * All Posts
