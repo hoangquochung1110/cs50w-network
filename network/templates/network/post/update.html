@@ -1,0 +1,28 @@
+{% load static %}
+<form hx-trigger="cancel" class="editing">
+<div class="post post-{{post.id}}">
+    {% csrf_token %}
+    <div class="post__header">
+        <h6class="post__poster">{{ post.publisher }}</h6>
+    </div>
+    <div class="post__body">
+        <!-- <textarea class="post__content" style="width: 100%">{{ post.content }}</textarea> -->
+        {{ form.content }}
+        <div class="oist_timestamp">{{ post.creation_date }}</div>
+    </div>
+</div>
+<button class="btn btn-danger" hx-post="{% url 'post-update' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="innerHTML">
+    Save
+</button>
+<button class="btn btn-danger" hx-get="{% url 'post-detail' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="outerHTML">
+    Cancel
+</button>
+</form>
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+  {% for error in form.non_field_errors %}
+    {{ error }}
+  {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,16 @@
+{% if request.user in object.followers.all %}
+    <button
+        class="follow-btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+    >Following</button>
+    <ul class="dropdown-menu">
+        <li
+            class="dropdown-item"
+            hx-trigger="click"
+            hx-post="{% url 'user-unfollow' pk=object.id %}"
+            hx-target=".follow-btn"
+            hx-swap="outerHTML"
+        >Unfollow</li>
+    </ul>
+{% else %}
+    <button class="follow-btn" hx-post="{% url 'user-follow' pk=object.id%}" hx-swap="outerHTML">Follow</button>
+{% endif %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container">
+    <header id="user-profile-header">
+        <div class="row">
+            <div id="user-profile-header__username">{{object.username}}</div>
+            {% include "network/fragments/follow.html" %}
+        </div>
+
+        <div class="row">
+            <div class="followers-count">{{object.followers_count}} Followers</div>
+            <div class="following-count">{{object.following_count}} Following</div>
+            <div class="posts-count">{{object.posts_count}} Posts</div>
+        </div>
+        <div><span style="font-weight:bold">{{object.first_name}} {{object.last_name}}</span></div>
+        <div>Date joined: {{object.date_joined.date}}</div>
+    </header>
+
+    <main>
+        <div class='user-posts'>
+        {% for post in object.posts.all %}
+        <div class="post post-{{post.id}}">
+            <div class="post__header">
+                <h6>{{ post.publisher }}</h6>
+            </div>
+            <div class="post__body">
+                <div class="post__content">{{ post.content }}</div>
+                <div class="oist_timestamp">{{ post.creation_date }}</div>
+            </div>
+            <div class="post__footer">
+                <button class="post__like-btn">
+                    <span class="material-icons md-15">favorite</span>
+                    {{ post.like }}
+                </button>
+                {% if request.user.id and request.user.id == post.publisher.id %}
+                <button
+                    class="post__edit-btn"
+                    hx-get="{% url 'post-update' pk=post.id %}"
+                    hx-target=".post-{{post.id}}"
+                    hx-trigger="edit"
+                    _="on click
+                    if .editing is not empty
+                      Swal.fire({title: 'Already Editing',
+                                 showCancelButton: true,
+                                 confirmButtonText: 'Yep, Edit This Post!',
+                                 text:'Hey!  You are already editing a post!  Do you want to cancel that edit and continue?'})
+                      if the result's isConfirmed is false
+                        halt
+                      end
+                      send cancel to .editing
+                    end
+                    trigger edit"><span class="material-icons md-15">edit</span></button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </main>
+
+</div>
+{% endblock %}

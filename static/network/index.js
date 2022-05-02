@@ -28,5 +28,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     overlay.addEventListener('click', hideUserProfilePopup);
 });
-
-

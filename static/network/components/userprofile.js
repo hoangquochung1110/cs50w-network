@@ -24,7 +24,7 @@ function showUserProfilePopup(e){
     createUserProfilePopup(e.target);
 }
 
-function hideUserProfilePopup(){ 
+function hideUserProfilePopup(){
     // function to hide a pop-up user profile card
     userProfilePopup.classList.remove('user-profile-popup--active');
     overlay.style.display = 'none';
@@ -59,7 +59,7 @@ function createUserProfilePopup(target){
             JSONResponse['followers'].forEach(follower => {
                 console.log(follower['id'],host_user_id);
                 if (follower['id'] == host_user_id){
-                    followBtn.innerHTML = `Following <span class="material-icons md-15">done</span>`; 
+                    followBtn.innerHTML = `Following <span class="material-icons md-15">done</span>`;
                     followBtn.disabled = true; // unable to follow more than once
                 }
             });
@@ -96,6 +96,6 @@ function createUserProfileHeader(){
             dropdown_off();
         })
     }
-} 
+}
 
 export {showUserProfilePopup, hideUserProfilePopup, createUserProfileHeader };

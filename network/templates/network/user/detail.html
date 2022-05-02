@@ -1,0 +1,39 @@
+{% load static %}
+
+<div id="modal-backdrop" class="modal-backdrop fade show" style="display:block;"></div>
+<div id="modal" class="modal fade show" tabindex="-1" style="display:block;">
+	<div class="modal-dialog modal-dialog-centered">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title">User detail</h5>
+		</div>
+		<div class="modal-body">
+            <div class="card mb-3">
+                <div class="row g-0" style="align-items: center;">
+                    <div class="col-md-4">
+                        <img class="card-img-top user-profile__img" src="{% static 'network/assets/user.png' %}" alt="Card image cap">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div id="user-profile-popup__title">
+                                <div id="user-profile-popup__username">{{ object.username }}</div>
+                                <button class="timeline-btn">
+                                  <a href="{% url 'user-timeline' username=object.username %}">Timeline</a>
+                                </button>
+                                {% include "network/fragments/follow.html" %}
+
+                            </div>
+                            <div class="followers-count">Followers: {{ object.followers_count }}</div>
+                            <div class="following-count">Following: {{ object.following_count }}</div>
+                            <div class="posts-count">Posts: {{ object.posts_count }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+		</div>
+	  </div>
+	</div>
+</div>

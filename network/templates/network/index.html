@@ -2,49 +2,23 @@
 {% load static %}
 
 {% block body %}
-    <div class="user-profile-popup">
-        <div class="card mb-3">
-            <div class="row g-0" style="align-items: center; margin-left: auto;">
-                <div class="col-md-4">
-                    <img class="card-img-top user-profile__img" src="{% static 'network/assets/user.png' %}" alt="Card image cap">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <div id="user-profile-popup__title">
-                            <div id="user-profile-popup__username"></div>
-                            <button class="timeline-btn">Timeline</button>
-                            <button class="follow-btn">Follow</button>
-
-                        </div>
-                        <!--
-                        <p id="user-profile__email-address"></p>
-                        <p id="user-profile__age"></p>
-                        <p id="user-profile__gender"></p>
-                        -->
-                        <div class="followers-count"></div>
-                        <div class="following-count"></div>
-                        <div class="posts-count"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="user-profile-popup"></div>
 
     <div class="container">
         <div class="row">
             <div class="col-9">
                 {% if user.is_authenticated %}
                 <div id="new-post">
-                    <form id="new-post__form">
-                        <textarea id="new-post__body" placeholder="Share your story with us !"></textarea>
-                        <button id="new-post__share-btn">Share</button>
-                    </form>
+                    {% include "network/post/create.html" %}
                 </div>
                 {% endif %}
                 {% if following_posts %}
                     <div class="following-posts"></div>
                 {% else %}
-                    <div class="all-posts"></div>
+                    <div class="all-posts">
+                    {% block all-posts %}
+                    {% endblock %}
+                    </div>
                 {% endif %}
             </div>
 
@@ -54,6 +28,30 @@
     </div>
     {{request.session.user_id|json_script:"user_id"}}
 
-    <script src="{% static 'network/index.js' %}" type="module"></script>
+    <!-- <script src="{% static 'network/index.js' %}" type="module"></script> -->
 
+{% endblock %}
+{% block extra_script %}
+<script>
+    function closeModal() {
+        // close user detail modal
+        var container = document.querySelector(".user-profile-popup")
+        var backdrop = document.getElementById("modal-backdrop")
+        var modal = document.getElementById("modal")
+
+        modal.classList.remove("show")
+        backdrop.classList.remove("show")
+
+        setTimeout(function() {
+            container.removeChild(backdrop)
+            container.removeChild(modal)
+        }, 200)
+    }
+
+    // clear input after make a new post
+    document.getElementById("new-post__form").addEventListener("htmx:after-request", clearInput);
+    function clearInput(){
+        this.reset();
+    }
+</script>
 {% endblock %}

@@ -15,3 +15,5 @@ black-22.3.0
 invoke-1.7.0
 rich
 flake8
+django-extensions
+django-filter

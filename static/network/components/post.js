@@ -51,7 +51,7 @@ function populatePost(item, parentContainer){
     [headerContainer, bodyContainer, footerContainer].forEach(element => postContainer.appendChild(element));
 
     parentContainer.appendChild(postContainer);
-    
+
 }
 
 function createPostHeader(item, headerContainer){
@@ -227,7 +227,7 @@ function paginatePosts(data, request_url, page, container){
 }
 
 function decorateLikeButton(btn, liked){
-    if (liked=='true'){ 
+    if (liked=='true'){
         // liked the post already
         btn.classList.remove('like-btn-active');
         btn.dataset.liked = 'false';

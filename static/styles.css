@@ -108,33 +108,6 @@ html {
     margin-left: 1em;
 }
 
-.user-profile-popup{
-	position: fixed;
-    left: 35%;
-	top: 12%;
-	z-index: 3; /* greater stack order makes this view sit in front of overlay */
-	max-width: 300px;
-    margin: 40px auto 10px auto;
-	transition: 200ms ease-in-out;
-	transform: scale(0); /* scale to 0 makes this view (still exists but) invisible */
-
-}
-
-.user-profile-popup--active{
-    transform: scale(1);
-}
-
-.overlay {
-	position: fixed;
-	display: none; /* hidden by default */
-	top: 0;
-	left: 0;
-	width: 100%; /* cover the whole page */
-	height: 100%; /* cover the whole page */
-	opacity: 1;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-}
 
 #user-profile-header{
     padding-bottom: 1em;
@@ -176,6 +149,10 @@ html {
     display: block;
     color: black;
     text-decoration: none;
+}
+
+.dropdown-display {
+    display: block;
 }
 
 .un-hoverable {

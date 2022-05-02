@@ -1,0 +1,9 @@
+<form
+    id="new-post__form"
+    hx-post="{% url 'post-create' %}"
+    hx-target=".all-posts"
+    hx-swap="beforebegin">
+    <textarea name="content" id="new-post__body" placeholder="Share your story with us !"></textarea>
+    <button
+        id="new-post__share-btn">Share</button>
+</form>

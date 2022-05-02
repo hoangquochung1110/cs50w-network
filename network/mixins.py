@@ -18,7 +18,6 @@ class GetPermissionClassMixin(object):
     """
 
     def get_permission_class(self):
-        print("running mixin")
         try:
             return list(self.permission_action_classes[self.action])
         except (KeyError, AttributeError):

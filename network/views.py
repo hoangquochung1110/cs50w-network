@@ -2,12 +2,17 @@ from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from jsonschema import ValidationError
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+
+from network.filters import PostFilter
+from network.forms import PostCreateForm
 
 from .mixins import GetSerializerClassMixin
 from .models import Post, User
@@ -259,3 +264,123 @@ class UserViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         request.user.save()
         response_serializer = ReadUserSerializer(instance=visited_user)
         return Response(response_serializer.data)
+
+
+class PostListView(ListView):
+    """View displays list of posts."""
+
+    model = Post
+    template_name = "network/post/list.html"
+    ordering = ("creation_date",)
+    filter_model = PostFilter
+
+    def get_queryset(self):
+        qs = Post.objects.select_related("publisher").all()
+        filterset_model = self.filter_model(request=self.request, queryset=qs)
+        return filterset_model.qs.order_by(*self.ordering)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        filter_model = self.filter_model(
+            request=self.request,
+            queryset=self.queryset,
+        )
+        context_data["filter"] = filter_model
+        return context_data
+
+
+class PostDetailView(DetailView):
+    """View for a specific post."""
+
+    model = Post
+    template_name = "network/post/detail.html"
+
+
+class PostCreateView(CreateView):
+    """View for post creation."""
+
+    model = Post
+    form_class = PostCreateForm
+    template_name = "network/post/create.html"
+    success_url = reverse_lazy("post-list")
+
+    def post(self, request, *args, **kwargs):
+        form = PostCreateForm(request.POST)
+        if form.is_valid():
+            post = form.save()
+            post.publisher = self.request.user
+            post.save()
+            return render(request, "network/post/detail.html", {"object": post})
+        return HttpResponseRedirect(reverse("post-list"))
+
+
+class PostUpdateView(UpdateView):
+    """View for post update."""
+
+    model = Post
+    form_class = PostCreateForm
+    template_name = "network/post/update.html"
+
+    def form_valid(self, form):
+        """Insert HX-Redirect attribute to response header.
+
+        The purpose is to modify htmx swapping mechanism
+        in case of successful update.
+        """
+        form.save()
+        return HttpResponseRedirect(reverse("post-detail", args=[self.object.id]))
+
+
+class UserDetailView(DetailView):
+    """View for publisher detail."""
+
+    model = User
+    template_name = "network/user/detail.html"
+
+
+class TimelineView(DetailView):
+    """View for a specific publisher."""
+
+    model = User
+    template_name = "network/user/timeline.html"
+    slug_url_kwarg = "username"
+
+    def get_object(self, queryset=None):
+        username = self.kwargs["username"]
+        return User.objects.get(username=username)
+
+
+class FollowView(UpdateView):
+    """View to follow/un-follow a specific user."""
+
+    def post(self, request, *args, **kwargs):
+        instance_id = kwargs["pk"]
+        instance = User.objects.get(id=instance_id)
+        followers_qs = instance.followers.all()
+        if self.request.user not in followers_qs:
+            instance.followers.add(self.request.user)
+            instance.save()
+            return render(
+                request,
+                "network/fragments/follow.html",
+                {"object": instance},
+            )
+        raise ValidationError("Can not follow user that you are following")
+
+
+class UnfollowView(UpdateView):
+    """View to unfollow a specific user."""
+
+    def post(self, request, *args, **kwargs):
+        instance_id = kwargs["pk"]
+        instance = User.objects.get(id=instance_id)
+        followers_qs = instance.followers.all()
+        if self.request.user in followers_qs:
+            instance.followers.remove(self.request.user)
+            instance.save()
+            return render(
+                request,
+                "network/fragments/follow.html",
+                {"object": instance}
+            )
+        raise ValidationError("Can not unfollow user that you are not following")

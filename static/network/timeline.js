@@ -17,4 +17,3 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdown_on();
     })
 });
-

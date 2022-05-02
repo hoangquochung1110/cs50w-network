@@ -1,0 +1,51 @@
+{% extends "network/index.html" %}
+{% load static %}
+
+<div class="all-posts">
+{% csrf_token %}
+{% block all-posts %}
+    {% for post in filter.qs %}
+        <div class="post post-{{post.id}}">
+            <div class="post__header">
+                <h6
+                    class="post__poster"
+                    hx-get="{% url 'user-detail' pk=post.publisher.id %}"
+                    hx-target=".user-profile-popup"
+                    hx-trigger="click"
+                    _="on htmx:afterOnLoad wait 10ms then add .show to #modal then add .show to #modal-backdrop"
+                    data-userid="{{ post.publisher.id }}"
+                >{{ post.publisher }}</h6>
+            </div>
+            <div class="post__body">
+                <div class="post__content">{{ post.content }}</div>
+                <div class="oist_timestamp">{{ post.creation_date }}</div>
+            </div>
+            <div class="post__footer">
+                <button class="post__like-btn">
+                    <span class="material-icons md-15">favorite</span>
+                    {{ post.like }}
+                </button>
+                {% if request.user.id and request.user.id == post.publisher.id %}
+                <button
+                    class="post__edit-btn"
+                    hx-get="{% url 'post-update' pk=post.id %}"
+                    hx-target=".post-{{post.id}}"
+                    hx-trigger="edit"
+                    _="on click
+                    if .editing is not empty
+                      Swal.fire({title: 'Already Editing',
+                                 showCancelButton: true,
+                                 confirmButtonText: 'Yep, Edit This Post!',
+                                 text:'Hey!  You are already editing a post!  Do you want to cancel that edit and continue?'})
+                      if the result's isConfirmed is false
+                        halt
+                      end
+                      send cancel to .editing
+                    end
+                    trigger edit"><span class="material-icons md-15">edit</span></button>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+</div>
