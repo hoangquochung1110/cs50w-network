@@ -1,0 +1,181 @@
+:root {
+    --new-post-color: #4E9EED;
+    --section-breaker-color: #D6D1D1;
+    --hover-color: #D4cece;    ;
+    --edit-post-color: #778899;
+    --like-button-color: #ff4d4d;
+}
+
+html {
+    font-size: 15px;
+    max-height: 100vh;
+}
+
+.container {
+    margin-top: .8em;
+    position: relative;
+    z-index: 0;
+}
+
+.post {
+    border-bottom: 1px solid #F1F1F1;
+    margin-bottom: 1em;
+}
+
+.post__like-btn, .post__edit-btn, .follow-btn, .timeline-btn {
+    background-color: white;
+}
+
+.post__like-btn {
+    outline: none !important;
+    border: none;
+    background: inherit;
+    padding-left: 0px;
+}
+
+.post__like-btn span {
+    pointer-events: none;
+}
+
+.post__edit-btn span {
+    pointer-events: none;
+}
+
+.post__edit-btn {
+    margin-left: 1em;
+    outline: none !important;
+    border: none;
+    background: inherit;
+    padding-left: 0px;
+    float: right;
+}
+
+.post__like-count {
+    display: inline;
+}
+
+.post__timestamp {
+    font-weight: lighter;
+    font-size: .9em;
+}
+
+#new-post, .edit-post {
+    min-height: 9em;
+    margin-bottom: 2em;
+}
+
+#new-post {
+    border: 5px solid var(--new-post-color);
+}
+
+.edit-post{
+    position: absolute;
+    border: 5px solid var(--edit-post-color);
+    transition: 200ms ease-in-out;
+	transform: scale(0); /* scale to 0 makes this view (still exists but) invisible */
+    z-index: 3;
+    background-color: white;
+    width: 510px;
+    left: 25%;
+	top: 40%;
+}
+
+#new-post__form, #edit-post__form {
+    margin: 0.5em;
+    width: 98%;
+}
+
+#new-post__share-btn, #edit-post_btn {
+    background-color: var(--new-post-color);
+    outline: none !important;
+    border: none !important;
+    margin-top: .5em;
+    color: white;
+}
+
+#new-post__form > textarea {
+    width: inherit;
+    height: 5em;
+}
+
+#edit-post__body {
+    width: inherit;
+    height: 5em;
+}
+
+#user-profile__img{
+    transform: scale(0.5, 0.5);
+    margin-left: 1em;
+}
+
+
+#user-profile-header{
+    padding-bottom: 1em;
+    border-bottom: 0.05em solid var(--section-breaker-color);
+}
+
+#user-profile-header > .row {
+    gap: 3em;
+}
+
+#user-profile-header > * {
+    margin: .5rem; /* rem instead of em because of the font-size as below */
+}
+
+#user-profile-header__username{
+    font-size: 1.8em;
+}
+
+.user-posts {
+    margin: .5em;
+}
+
+.md-15 {
+    font-size: 15px !important;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    cursor: default;
+}
+
+.dropdown-content a {
+    padding: 12px 16px;
+    display: block;
+    color: black;
+    text-decoration: none;
+}
+
+.dropdown-display {
+    display: block;
+}
+
+.un-hoverable {
+    pointer-events: none;
+}
+
+.dropdown:hover .dropdown-content{display: block;}
+.dropdown:hover .follow-btn{background-color: var(--hover-color);}
+
+.like-btn-colorized {
+    color: var(--like-button-color);
+}
+
+.page-nav {
+    justify-content: center;
+}
+
+.page-nav li {
+    margin: .5em;
+}
+
+.fixed-nav {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="user-profile-popup"></div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                {% if user.is_authenticated %}
+                <div id="new-post">
+                    {% include "fragments/post/create.html" %}
+                </div>
+                {% endif %}
+                {% if following_posts %}
+                    <div class="following-posts"></div>
+                {% else %}
+                    <div class="all-posts">
+                    {% block all-posts %}
+                    {% endblock %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-3">
+            </div>
+        </div>
+    </div>
+    {{request.session.user_id|json_script:"user_id"}}
+
+{% endblock %}
+{% block extra_script %}
+<script>
+    function closeModal() {
+        // close user detail modal
+        var container = document.querySelector(".user-profile-popup")
+        var backdrop = document.getElementById("modal-backdrop")
+        var modal = document.getElementById("modal")
+
+        modal.classList.remove("show")
+        backdrop.classList.remove("show")
+
+        setTimeout(function() {
+            container.removeChild(backdrop)
+            container.removeChild(modal)
+        }, 200)
+    }
+
+    // clear input after make a new post
+    document.getElementById("new-post__form").addEventListener("htmx:after-request", clearInput);
+    function clearInput(){
+        this.reset();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% if request.user == object %}
+{% elif request.user in object.followers.all %}
+    <button
+        class="follow-btn following dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+    >Following</button>
+    <ul class="dropdown-menu">
+        <li
+            class="dropdown-item"
+            hx-trigger="click"
+            hx-post="{% url 'api-user-unfollow' pk=object.id %}"
+            hx-target=".follow-btn"
+            hx-swap="outerHTML"
+            _="on htmx:afterRequest send updateFollowersCount to .followers-count"
+        >Unfollow</li>
+    </ul>
+{% else %}
+    <button
+        class="follow-btn"
+        hx-post="{% url 'api-user-follow' pk=object.id%}"
+        hx-swap="outerHTML"
+        _="on htmx:afterRequest send updateFollowersCount to .followers-count"
+    >Follow</button>
+{% endif %}

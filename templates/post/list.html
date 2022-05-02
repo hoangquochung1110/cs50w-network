@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+{% load static %}
+
+<div class="all-posts">
+{% csrf_token %}
+{% block all-posts %}
+    {% for object in filter.qs %}
+        {% include "fragments/post/detail.html" %}
+    {% endfor %}
+{% endblock %}
+</div>
