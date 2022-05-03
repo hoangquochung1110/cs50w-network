@@ -9,7 +9,7 @@
             <div class="col-9">
                 {% if user.is_authenticated %}
                 <div id="new-post">
-                    {% include "network/post/create.html" %}
+                    {% include "fragments/post/create.html" %}
                 </div>
                 {% endif %}
                 {% if following_posts %}

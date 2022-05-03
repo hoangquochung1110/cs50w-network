@@ -96,7 +96,7 @@ def timeline(request, username):
     serializer = ReadUserSerializer(visited_user.followers.all(), many=True)
     return render(
         request,
-        "network/timeline.html",
+        "user/timeline.html",
         context={
             "visited_user": visited_user,
             "visited_user_followers": serializer.data,
@@ -270,7 +270,7 @@ class PostListView(ListView):
     """View displays list of posts."""
 
     model = Post
-    template_name = "network/post/list.html"
+    template_name = "post/list.html"
     ordering = ("creation_date",)
     filter_model = PostFilter
 
@@ -293,7 +293,7 @@ class PostDetailView(DetailView):
     """View for a specific post."""
 
     model = Post
-    template_name = "network/post/detail.html"
+    template_name = "fragments/post/detail.html"
 
 
 class PostCreateView(CreateView):
@@ -301,7 +301,7 @@ class PostCreateView(CreateView):
 
     model = Post
     form_class = PostCreateForm
-    template_name = "network/post/create.html"
+    template_name = "fragments/post/create.html"
     success_url = reverse_lazy("post-list")
 
     def post(self, request, *args, **kwargs):
@@ -310,7 +310,7 @@ class PostCreateView(CreateView):
             post = form.save()
             post.publisher = self.request.user
             post.save()
-            return render(request, "network/post/detail.html", {"object": post})
+            return render(request, "fragments/post/detail.html", {"object": post})
         return HttpResponseRedirect(reverse("post-list"))
 
 
@@ -319,7 +319,7 @@ class PostUpdateView(UpdateView):
 
     model = Post
     form_class = PostCreateForm
-    template_name = "network/post/update.html"
+    template_name = "fragments/post/update.html"
 
     def form_valid(self, form):
         """Insert HX-Redirect attribute to response header.
@@ -335,14 +335,14 @@ class UserDetailView(DetailView):
     """View for publisher detail."""
 
     model = User
-    template_name = "network/user/detail.html"
+    template_name = "fragments/user/detail.html"
 
 
 class TimelineView(DetailView):
     """View for a specific publisher."""
 
     model = User
-    template_name = "network/user/timeline.html"
+    template_name = "user/timeline.html"
     slug_url_kwarg = "username"
 
     def get_object(self, queryset=None):
@@ -362,7 +362,7 @@ class FollowView(UpdateView):
             instance.save()
             return render(
                 request,
-                "network/fragments/follow.html",
+                "fragments/user/follow.html",
                 {"object": instance},
             )
         raise ValidationError("Can not follow user that you are following")
@@ -380,7 +380,7 @@ class UnfollowView(UpdateView):
             instance.save()
             return render(
                 request,
-                "network/fragments/follow.html",
+                "fragments/user/follow.html",
                 {"object": instance}
             )
         raise ValidationError("Can not unfollow user that you are not following")

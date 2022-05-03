@@ -20,7 +20,7 @@
                                 <button class="timeline-btn">
                                   <a href="{% url 'user-timeline' username=object.username %}">Timeline</a>
                                 </button>
-                                {% include "network/fragments/follow.html" %}
+                                {% include "fragments/user/follow.html" %}
 
                             </div>
                             <div class="followers-count">Followers: {{ object.followers_count }}</div>
