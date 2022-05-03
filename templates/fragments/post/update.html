@@ -1,6 +1,6 @@
 {% load static %}
-<form hx-trigger="cancel" class="editing">
-<div class="post post-{{post.id}}">
+<form hx-trigger="cancel" class="editing" hx-get="{% url 'post-detail' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="outerHTML">
+<!-- <div class="post post-{{post.id}}"> -->
     {% csrf_token %}
     <div class="post__header">
         <h6class="post__poster">{{ post.publisher }}</h6>
@@ -10,8 +10,8 @@
         {{ form.content }}
         <div class="oist_timestamp">{{ post.creation_date }}</div>
     </div>
-</div>
-<button class="btn btn-danger" hx-post="{% url 'post-update' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="innerHTML">
+<!-- </div> -->
+<button class="btn btn-danger" hx-post="{% url 'post-update' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="outerHTML">
     Save
 </button>
 <button class="btn btn-danger" hx-get="{% url 'post-detail' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="outerHTML">

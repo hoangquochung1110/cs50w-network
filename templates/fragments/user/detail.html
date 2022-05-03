@@ -23,9 +23,33 @@
                                 {% include "fragments/user/follow.html" %}
 
                             </div>
-                            <div class="followers-count">Followers: {{ object.followers_count }}</div>
+                            <table>
+                              <tr>
+                                <th>Followers</th>
+                                <th>Following</th>
+                                <th>Posts</th>
+                              </tr>
+                              <tr>
+                                <td
+                                  class="followers-count"
+                                  _="on updateFollowersCount
+                                  set followers to parseInt(my textContent)
+                                  if .following is not empty
+                                    set followers to followers + 1
+                                    set my textContent to followers
+                                  else
+                                    set followers to followers - 1
+                                    set my textContent to followers
+                                  "
+                                >{{ object.followers_count }}</td>
+                                <td class="following-count user-stats-counts">{{ object.following_count }}</td>
+                                <td class="posts-count user-stats-counts">{{ object.posts_count }}</td>
+                              </tr>
+                            </table>
+
+                            <!-- <div class="followers-count">Followers: {{ object.followers_count }}</div>
                             <div class="following-count">Following: {{ object.following_count }}</div>
-                            <div class="posts-count">Posts: {{ object.posts_count }}</div>
+                            <div class="posts-count">Posts: {{ object.posts_count }}</div> -->
                         </div>
                     </div>
                 </div>

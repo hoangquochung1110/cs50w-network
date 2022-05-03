@@ -10,9 +10,29 @@
         </div>
 
         <div class="row">
-            <div class="followers-count">{{object.followers_count}} Followers</div>
-            <div class="following-count">{{object.following_count}} Following</div>
-            <div class="posts-count">{{object.posts_count}} Posts</div>
+            <table>
+                <tr>
+                  <th>Followers</th>
+                  <th>Following</th>
+                  <th>Posts</th>
+                </tr>
+                <tr>
+                  <td
+                    class="followers-count"
+                    _="on updateFollowersCount
+                    set followers to parseInt(my textContent)
+                    if .following is not empty
+                      set followers to followers + 1
+                      set my textContent to followers
+                    else
+                      set followers to followers - 1
+                      set my textContent to followers
+                    "
+                  >{{ object.followers_count }}</td>
+                  <td class="following-count user-stats-counts">{{ object.following_count }}</td>
+                  <td class="posts-count user-stats-counts">{{ object.posts_count }}</td>
+                </tr>
+              </table>
         </div>
         <div><span style="font-weight:bold">{{object.first_name}} {{object.last_name}}</span></div>
         <div>Date joined: {{object.date_joined.date}}</div>
@@ -60,4 +80,6 @@
     </main>
 
 </div>
+{% endblock %}
+{% block extra_script %}
 {% endblock %}

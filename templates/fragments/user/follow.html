@@ -1,6 +1,6 @@
 {% if request.user in object.followers.all %}
     <button
-        class="follow-btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+        class="follow-btn following dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
     >Following</button>
     <ul class="dropdown-menu">
         <li
@@ -9,8 +9,14 @@
             hx-post="{% url 'api-user-unfollow' pk=object.id %}"
             hx-target=".follow-btn"
             hx-swap="outerHTML"
+            _="on htmx:afterRequest send updateFollowersCount to .followers-count"
         >Unfollow</li>
     </ul>
 {% else %}
-    <button class="follow-btn" hx-post="{% url 'api-user-follow' pk=object.id%}" hx-swap="outerHTML">Follow</button>
+    <button
+        class="follow-btn"
+        hx-post="{% url 'api-user-follow' pk=object.id%}"
+        hx-swap="outerHTML"
+        _="on htmx:afterRequest send updateFollowersCount to .followers-count"
+    >Follow</button>
 {% endif %}
