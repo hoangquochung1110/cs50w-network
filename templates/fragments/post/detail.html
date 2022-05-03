@@ -2,7 +2,7 @@
     <div class="post__header">
         <h6
             class="post__poster"
-            hx-get="/user/{{post.publisher.id}}"
+            hx-get="/user/{{object.publisher.id}}"
             hx-target=".user-profile-popup"
             hx-trigger="click"
             _="on htmx:afterOnLoad wait 10ms then add .show to #modal then add .show to #modal-backdrop"
