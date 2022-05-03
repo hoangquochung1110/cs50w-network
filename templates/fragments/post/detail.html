@@ -13,10 +13,25 @@
         <div class="oist_timestamp">{{ object.creation_date }}</div>
     </div>
     <div class="post__footer">
-        <button class="post__like-btn">
-            <span class="material-icons md-15">favorite</span>
-            {{ object.like }}
-        </button>
+        {% if request.user not in object.liked_by.all %}
+            <button
+                class="post__like-btn"
+                hx-post="{% url 'api-post-like' pk=object.id %}"
+                hx-target=".post-{{object.id}}"
+                hx-swap="outerHTML"
+                ><span class="material-icons md-15">favorite</span>
+                {{ object.like }}
+            </button>
+        {% else %}
+            <button
+            class="post__like-btn like-btn-active"
+            hx-post="{% url 'api-post-unlike' pk=object.id %}"
+            hx-target=".post-{{object.id}}"
+            hx-swap="outerHTML"
+            ><span class="material-icons md-15">favorite</span>
+                {{ object.like }}
+            </button>
+        {% endif %}
         {% if request.user.id and request.user.id == object.publisher.id %}
         <button
             class="post__edit-btn"

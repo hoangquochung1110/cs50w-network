@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
-from jsonschema import ValidationError
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -144,8 +143,9 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             post_obj.like += 1
             post_obj.liked_by.add(request.user)
             post_obj.save()
-            response_serializer = ReadPostSerializer(instance=post_obj)
-            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+            return HttpResponseRedirect(
+                reverse("post-detail", kwargs={"pk": post_obj.id})
+            )
         return Response(
             {"detail": "user %s can not like the post more than once" % request.user},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -159,8 +159,9 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             post_obj.like -= 1
             post_obj.liked_by.remove(request.user)
             post_obj.save()
-            response_serializer = ReadPostSerializer(instance=post_obj)
-            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+            return HttpResponseRedirect(
+                reverse("post-detail", kwargs={"pk": post_obj.id})
+            )
         return Response(
             {
                 "detail": "user %s can not unlike the post without liking it first"
@@ -254,16 +255,22 @@ class UserViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     def follow(self, request, pk):
         visited_user = self.get_object()
         visited_user.followers.add(request.user)
-        response_serializer = ReadUserSerializer(instance=visited_user)
-        return Response(response_serializer.data)
+        return render(
+            request,
+            "fragments/user/follow.html",
+            {"object": visited_user},
+        )
 
     @action(detail=True, methods=["post"])
     def unfollow(self, request, pk):
         visited_user = self.get_object()
         request.user.following.remove(visited_user)
         request.user.save()
-        response_serializer = ReadUserSerializer(instance=visited_user)
-        return Response(response_serializer.data)
+        return render(
+            request,
+            "fragments/user/follow.html",
+            {"object": visited_user},
+        )
 
 
 class PostListView(ListView):
@@ -348,39 +355,3 @@ class TimelineView(DetailView):
     def get_object(self, queryset=None):
         username = self.kwargs["username"]
         return User.objects.get(username=username)
-
-
-class FollowView(UpdateView):
-    """View to follow/un-follow a specific user."""
-
-    def post(self, request, *args, **kwargs):
-        instance_id = kwargs["pk"]
-        instance = User.objects.get(id=instance_id)
-        followers_qs = instance.followers.all()
-        if self.request.user not in followers_qs:
-            instance.followers.add(self.request.user)
-            instance.save()
-            return render(
-                request,
-                "fragments/user/follow.html",
-                {"object": instance},
-            )
-        raise ValidationError("Can not follow user that you are following")
-
-
-class UnfollowView(UpdateView):
-    """View to unfollow a specific user."""
-
-    def post(self, request, *args, **kwargs):
-        instance_id = kwargs["pk"]
-        instance = User.objects.get(id=instance_id)
-        followers_qs = instance.followers.all()
-        if self.request.user in followers_qs:
-            instance.followers.remove(self.request.user)
-            instance.save()
-            return render(
-                request,
-                "fragments/user/follow.html",
-                {"object": instance}
-            )
-        raise ValidationError("Can not unfollow user that you are not following")
