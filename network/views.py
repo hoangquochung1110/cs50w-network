@@ -24,11 +24,11 @@ from .serializers import (ReadPostSerializer, ReadUserSerializer,
 def index(request):
     if request.user.is_anonymous:
         request.session["user_id"] = -1
-    return render(request, "network/index.html")
+    return render(request, "index.html")
 
 
 def page_not_found(request):
-    return render(request, "network/notfound.html")
+    return render(request, "notfound.html")
 
 
 def login_view(request):
@@ -82,13 +82,13 @@ def register(request):
         except IntegrityError:
             return render(
                 request,
-                "network/register.html",
+                "register.html",
                 {"message": "Username already taken."},
             )
         login(request, user)
         return HttpResponseRedirect(reverse("login"))
     else:
-        return render(request, "network/register.html")
+        return render(request, "register.html")
 
 
 def timeline(request, username):
@@ -105,7 +105,7 @@ def timeline(request, username):
 
 
 def following_posts(request):
-    return render(request, "network/index.html", context={"following_posts": True})
+    return render(request, "index.html", context={"following_posts": True})
 
 
 class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
