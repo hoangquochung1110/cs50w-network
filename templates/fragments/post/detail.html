@@ -35,6 +35,7 @@
         {% if request.user.id and request.user.id == object.publisher.id %}
         <button
             class="post__edit-btn"
+            hx-trigger="edit"
             hx-get="{% url 'post-update' pk=object.id %}"
             hx-target=".post-{{object.id}}"
             _="on click
