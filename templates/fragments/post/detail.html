@@ -24,7 +24,7 @@
             </button>
         {% else %}
             <button
-            class="post__like-btn like-btn-active"
+            class="post__like-btn like-btn-colorized"
             hx-post="{% url 'api-post-unlike' pk=object.id %}"
             hx-target=".post-{{object.id}}"
             hx-swap="outerHTML"

@@ -162,7 +162,7 @@ html {
 .dropdown:hover .dropdown-content{display: block;}
 .dropdown:hover .follow-btn{background-color: var(--hover-color);}
 
-.like-btn-active {
+.like-btn-colorized {
     color: var(--like-button-color);
 }
 
