@@ -26,4 +26,5 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/", include("network.api.urls")),
 ]

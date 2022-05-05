@@ -10,7 +10,7 @@ class PostFilter(django_filters.FilterSet):
         model = Post
         fields = (
             "publisher",
-            "creation_date",
+            # "creation_date",
         )
 
     def publisher_filter(self, queryset, name, value):
