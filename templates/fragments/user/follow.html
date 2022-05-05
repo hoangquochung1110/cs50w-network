@@ -1,4 +1,5 @@
-{% if request.user in object.followers.all %}
+{% if request.user == object %}
+{% elif request.user in object.followers.all %}
     <button
         class="follow-btn following dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
     >Following</button>
