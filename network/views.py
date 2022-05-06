@@ -32,17 +32,16 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            request.session["user_id"] = user.id
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("post-list"))
         else:
             return render(
                 request,
-                "network/login.html",
+                "login.html",
                 {"message": "Invalid username and/or password."},
             )
     else:
 
-        return render(request, "network/login.html")
+        return render(request, "login.html")
 
 
 def logout_view(request):
@@ -61,7 +60,7 @@ def register(request):
         if password != confirmation:
             return render(
                 request,
-                "network/register.html",
+                "register.html",
                 {"message": "Passwords must match."},
             )
 
