@@ -1,6 +1,4 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -50,7 +48,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             post_obj.like += 1
             post_obj.liked_by.add(request.user)
             post_obj.save()
-            return render(request, "fragments/post/detail.html", {"pk": post_obj.id})
+            return render(request, "fragments/post/detail.html", {"object": post_obj})
         return Response(
             {"detail": "user %s can not like the post more than once" % request.user},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -64,7 +62,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             post_obj.like -= 1
             post_obj.liked_by.remove(request.user)
             post_obj.save()
-            return render(request, "fragments/post/detail.html", {"pk": post_obj.id})
+            return render(request, "fragments/post/detail.html", {"object": post_obj})
         return Response(
             {
                 "detail": "user %s can not unlike the post without liking it first"
