@@ -11,10 +11,10 @@
         <div class="oist_timestamp">{{ post.creation_date }}</div>
     </div>
 <!-- </div> -->
-<button class="btn btn-danger" hx-post="{% url 'post-update' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="outerHTML">
+<button class="btn btn-outline-primary" hx-post="{% url 'post-update' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="outerHTML">
     Save
 </button>
-<button class="btn btn-danger" hx-get="{% url 'post-detail' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="outerHTML">
+<button class="btn btn-outline-secondary" hx-get="{% url 'post-detail' pk=post.id %}" hx-target=".post-{{post.id}}" hx-swap="outerHTML">
     Cancel
 </button>
 </form>
