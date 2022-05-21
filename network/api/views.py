@@ -63,6 +63,7 @@ class PostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             post_obj.liked_by.remove(request.user)
             post_obj.save()
             return render(request, "fragments/post/detail.html", {"object": post_obj})
+
         return Response(
             {
                 "detail": "user %s can not unlike the post without liking it first"
