@@ -101,6 +101,8 @@ DATABASES["default"].update(db_from_env)
 
 AUTH_USER_MODEL = "network.User"
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
