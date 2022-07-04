@@ -17,4 +17,3 @@ rich
 flake8
 django-extensions
 django-filter
-python-decouple-3.6
