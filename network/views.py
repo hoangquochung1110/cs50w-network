@@ -173,9 +173,9 @@ class FollowingPostsView(ListView):
 
     def get_queryset(self):
         following_users = self.request.user.following.all()
-        return Post.objects.filter(
-            publisher__in=following_users
-        ).order_by("-creation_date")
+        return Post.objects.filter(publisher__in=following_users).order_by(
+            "-creation_date"
+        )
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

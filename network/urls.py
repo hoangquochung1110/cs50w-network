@@ -16,9 +16,7 @@ urlpatterns = [
     path("post/update/<int:pk>", views.PostUpdateView.as_view(), name="post-update"),
     # user views
     path(
-        "timeline/<slug:username>",
-        views.TimelineView.as_view(),
-        name="user-timeline"
+        "timeline/<slug:username>", views.TimelineView.as_view(), name="user-timeline"
     ),
     path("user/<int:pk>", views.UserDetailView.as_view(), name="user-detail"),
 ]
