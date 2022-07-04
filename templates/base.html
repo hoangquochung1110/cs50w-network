@@ -9,50 +9,51 @@
         <link href="{% static 'network/css/styles.css' %}" rel="stylesheet">
     </head>
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light px-3">
-            <a class="navbar-brand" href="#">Network</a>
-            <div>
-                <ul class="navbar-nav mr-auto">
-                    {% if user.is_authenticated %}
+        <div class="container-fluid px-0 d-flex flex-column align-items-stretch h-100">
+            <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light px-3">
+                <a class="navbar-brand" href="#">Network</a>
+                <div>
+                    <ul class="navbar-nav mr-auto">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
+                        <a class="nav-link" href="{% url 'post-list' %}">All Posts</a>
                         </li>
-                    {% endif %}
-                    <li class="nav-item">
-                    <a class="nav-link" href="{% url 'post-list' %}">All Posts</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'post-following' %}">Following</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Register</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'post-following' %}">Following</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">Register</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
 
-        <div class="body">
-            <div class="edit-post">
-                <form id="edit-post__form">
-                    <label>Edit Post</label>
-                    <textarea id="edit-post__body"></textarea>
-                    <button id="edit-post__btn">Save</button>
-                </form>
+            <div class="body">
+                <div class="edit-post">
+                    <form id="edit-post__form">
+                        <label>Edit Post</label>
+                        <textarea id="edit-post__body"></textarea>
+                        <button id="edit-post__btn">Save</button>
+                    </form>
+                </div>
+                <div class="overlay"></div>
+                {% block body %}
+                {% endblock %}
             </div>
-            <div class="overlay"></div>
-            {% block body %}
-            {% endblock %}
         </div>
-
         <nav aria-label="Page navigation example">
             <ul class="pagination page-nav">
 
