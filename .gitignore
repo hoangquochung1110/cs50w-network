@@ -137,3 +137,5 @@ dmypy.json
 
 # Visual Code
 *.vscode/
+
+staticfiles/*
