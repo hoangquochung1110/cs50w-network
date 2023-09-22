@@ -1,35 +1,19 @@
-from invoke import Exit, UnexpectedExit, task
-from rich import print
-from rich.panel import Panel
-
-BASE_FOLDERS = "project4 network"
+from provision import project, linters
+from invoke import Collection
 
 
-@task
-def format(context, path=BASE_FOLDERS):
-    context.run(f"python -m black {path}")
+ns = Collection(
+    linters,
+    project,
+)
 
 
-@task
-def isort(context, path=BASE_FOLDERS):
-    context.run(f"python -m isort {path}")
-
-
-@task
-def flake8(context, path=BASE_FOLDERS):
-    context.run(f"python -m flake8 {path}")
-
-
-@task
-def checkall(context, path=BASE_FOLDERS):
-    linters = [isort, flake8]
-    failed = []
-    for linter in linters:
-        try:
-            linter(context, path)
-        except UnexpectedExit:
-            failed.append(linter.__name__)
-    if failed:
-        msg = f"Linters failed: {', '.join(map(str.capitalize, failed))}"
-        print(Panel(msg, style="yellow bold"))
-        raise Exit(code=1)
+# Configurations for run command
+ns.configure(
+    dict(
+        run=dict(
+            pty=True,
+            echo=True,
+        ),
+    ),
+)
