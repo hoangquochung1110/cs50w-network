@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_DB=${COMPOSE_PROJECT_NAME}-dev
+      - POSTGRES_USER=${COMPOSE_PROJECT_NAME}-user
+      - POSTGRES_PASSWORD=manager
