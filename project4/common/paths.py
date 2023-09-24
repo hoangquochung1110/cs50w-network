@@ -4,7 +4,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / "subdir"
 CONFIG_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR = CONFIG_DIR.parent.parent
+BASE_DIR = CONFIG_DIR.parent
 
 
 def _default_media_path(model_instance, filename):
