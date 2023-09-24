@@ -3,6 +3,7 @@ from invoke import task
 
 MAIN_CONTAINERS = [
     "postgres",
+    "web",
 ]
 
 
