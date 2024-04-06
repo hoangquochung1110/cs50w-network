@@ -13,8 +13,8 @@ pre-commit install
 * All Posts
 * Profile Page
 * Following: A section that is similar to All Posts section but display only posts made by users that the current user follows.
-* Pagination: In any page, there are 10 posts to be display on a page. 
-* Edit Post: 
+* Pagination: In any page, there are 10 posts to be display on a page.
+* Edit Post:
 * “Like” and “Unlike”: Users can toggle the "like button" to decide whether they like a post or not. The like count is updated without reloading page
 * Filtering (not deployed to prod): Search a certain user by his username
 

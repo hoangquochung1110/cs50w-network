@@ -1,5 +1,6 @@
-from . import common
 from invoke import task
+
+from . import common
 
 MAIN_CONTAINERS = [
     "postgres",

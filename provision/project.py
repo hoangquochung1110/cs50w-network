@@ -1,5 +1,7 @@
 from invoke import task
+
 from . import common, django
+
 
 @task
 def init(context, clean=False):
@@ -15,7 +17,7 @@ def init(context, clean=False):
 @task
 def install_tools(context):
     """Install shell/cli dependencies, and tools needed to install requirements
- 
+
     """
     context.run("pip install --upgrade setuptools pip pip-tools wheel")
 

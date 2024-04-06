@@ -1,6 +1,6 @@
-from provision import project, linters, docker, django
 from invoke import Collection
 
+from provision import django, docker, linters, project
 
 ns = Collection(
     linters,

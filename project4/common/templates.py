@@ -1,5 +1,6 @@
-from .paths import BASE_DIR
 import os
+
+from .paths import BASE_DIR
 
 TEMPLATES = [
     {
