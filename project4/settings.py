@@ -11,8 +11,15 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from .common import *
+
 import dj_database_url
+import environ
+
+from .common import *
+
+env = environ.Env()
+
+env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,16 +53,13 @@ WSGI_APPLICATION = "project4.wsgi.application"
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('COMPOSE_PROJECT_NAME') + '-dev',
-        'USER': os.environ.get('COMPOSE_PROJECT_NAME') + '-user',
-        'PASSWORD': 'manager',
-        'HOST': 'postgres',  # This should match the service name in docker-compose.yml
-        'PORT': '5432',
-    }
-}
+DATABASES["default"].update(
+    NAME=env.str("RDS_DB_NAME"),
+    USER=env.str("RDS_DB_USER"),
+    PASSWORD=env.str("RDS_DB_PASSWORD"),
+    HOST=env.str("RDS_DB_HOST"),
+    PORT=env.str("RDS_DB_PORT"),
+)
 
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES["default"].update(db_from_env)
