@@ -17,3 +17,6 @@ repos:
     rev: 4.0.1
     hooks:
     -   id: flake8
+
+ci:
+    autoupdate_schedule: 'weekly'
