@@ -7,5 +7,5 @@ pyenv local cs50
 
 Install requirements
 ```
-pip install -r requirements.txt
+poetry install --no-root --no-interaction --no-ansi
 ```
