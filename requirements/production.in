@@ -2,7 +2,6 @@ Django
 djangorestframework
 drf-spectacular
 Pillow
-drf-nested-routers
 factory-boy
 coverage
 whitenoise
