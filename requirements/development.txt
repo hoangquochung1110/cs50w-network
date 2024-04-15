@@ -69,7 +69,6 @@ django==4.2.5
     #   django-extensions
     #   django-filter
     #   djangorestframework
-    #   drf-nested-routers
     #   drf-spectacular
 django-debug-toolbar==4.2.0
     # via -r requirements/development.in
@@ -82,10 +81,7 @@ django-filter==23.3
 djangorestframework==3.14.0
     # via
     #   -r requirements/production.txt
-    #   drf-nested-routers
     #   drf-spectacular
-drf-nested-routers==0.93.4
-    # via -r requirements/production.txt
 drf-spectacular==0.26.4
     # via -r requirements/production.txt
 exceptiongroup==1.1.3
