@@ -30,11 +30,13 @@ def up_containers(context, containers, detach=True, **kwargs):
     )
     context.run(cmd)
 
+
 def stop_containers(context, containers):
     """Stop containers."""
     common.success(f"Stopping {' '.join(containers)} containers ")
     cmd = f"docker-compose stop {' '.join(containers)}"
     context.run(cmd)
+
 
 @task
 def up(context):
