@@ -21,6 +21,11 @@ gunicorn = "^22.0.0"
 django-filter = "^23.3"
 django-environ = "^0.11.2"
 whitenoise = "^6.5.0"
+invoke = "^2.2.0"
+# A framework for managing and maintaining multi-language pre-commit hooks.
+# https://pre-commit.com/
+pre-commit = "^3.5.0"
+rich = "^13.5.3"
 
 [tool.poetry.group.dev.dependencies]
 ipdb = "^0.13.13"
@@ -87,10 +92,6 @@ psycopg2-binary = "^2.9.9"
 # A Python library for parsing and creating TOML
 # https://pypi.org/project/toml/
 toml = "^0.10.2"
-# A framework for managing and maintaining multi-language pre-commit hooks.
-# https://pre-commit.com/
-pre-commit = "^3.5.0"
-rich = "^13.5.3"
 
 [build-system]
 requires = ["poetry-core"]

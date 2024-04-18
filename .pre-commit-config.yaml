@@ -17,10 +17,17 @@ repos:
     rev: 7.0.0
     hooks:
     -   id: flake8
-        exclude: |
-            (?x)^(
-                project4/settings.py|
-            )$
+        exclude: migrations|.venv|__init__.py|project4
+
+-   repo: local
+    hooks:
+    -   id: tests
+        name: run tests
+        entry: python manage.py test
+        language: system
+        pass_filenames: false
+        types: [ python ]
+        stages: [ push ]
 
 ci:
     autoupdate_schedule: 'weekly'

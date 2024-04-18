@@ -1,3 +1,5 @@
+import os
+
 from invoke import task
 
 from . import common, django
@@ -12,6 +14,12 @@ def init(context, clean=False):
     pip_compile(context)
     django.migrate(context)
     django.createsuperuser(context)
+
+
+@task
+def build(context):
+    """Build python environ"""
+    install_requirements(context)
 
 
 @task
@@ -39,8 +47,8 @@ def pre_commit(context):
 @task
 def install_requirements(context, env="development"):
     """Install local development requirements"""
-    common.success(f"Install requirements with pip from {env}.txt")
-    context.run(f"pip install -r requirements/{env}.txt")
+    common.success("Install requirements with poetry")
+    context.run("poetry install --no-root --no-interaction --no-ansi")
 
 
 @task
@@ -54,3 +62,17 @@ def pip_compile(context, update=False):
     ]
     for in_file in in_files:
         context.run(f"pip-compile -q {in_file} {upgrade}")
+
+
+@task
+def init_local_settings(context, force_update=True):
+    """Copy local settings from template
+
+    Args:
+        force_update(bool): rewrite file if exists or not
+    """
+    local_settings = "project4/local.py"
+    local_template = "project4/local.template.py"
+
+    if force_update or not os.path.isfile(local_settings):
+        context.run(" ".join(["cp", local_template, local_settings]))
