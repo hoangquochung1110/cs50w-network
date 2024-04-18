@@ -21,6 +21,7 @@ def install_tools(context):
     """
     context.run("pip install --upgrade setuptools pip pip-tools wheel")
 
+
 @task
 def pre_commit(context):
     """Install git hooks via pre-commit."""
