@@ -128,30 +128,3 @@ class UserViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             "fragments/user/follow.html",
             {"object": visited_user},
         )
-
-
-class NestedPostViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
-    """
-    This view is nested in UserViewSet
-    """
-
-    queryset = Post.objects.all()
-    serializer_class = ReadPostSerializer
-    permission_classes = [
-        AllowAny,
-    ]
-    serializer_action_classes = {
-        "list": ReadPostSerializer,
-        "create": WritePostSerializer,
-        "retrieve": ReadPostSerializer,
-        "partial_update": WritePostSerializer,
-        "update": WritePostSerializer,
-        "destroy": ReadPostSerializer,
-    }
-
-    def get_queryset(self):
-        publisher_id = self.kwargs["user_pk"]
-        queryset = Post.objects.filter(publisher_id=publisher_id)
-        if self.action == "list":
-            return queryset.order_by("-creation_date")
-        return queryset
