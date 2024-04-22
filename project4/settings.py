@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
-import dj_database_url
 import environ
 
 from .common import *
@@ -36,11 +35,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get("DEBUG", "") != "False"
 
 ALLOWED_HOSTS = [
-    "0.0.0.0",
-    "localhost",
-    "127.0.0.1",
-    "sheltered-chamber-68323.herokuapp.com",
-    "network-staging.herokuapp.com",
+    "*",
 ]
 
 
@@ -60,9 +55,6 @@ DATABASES["default"].update(
     HOST=env.str("RDS_DB_HOST"),
     PORT=env.str("RDS_DB_PORT"),
 )
-
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES["default"].update(db_from_env)
 
 AUTH_USER_MODEL = "network.User"
 
