@@ -80,3 +80,19 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 SITE_ID = 1
+
+
+# ------------------------------------------------------------------------------
+# EMAIL SETTINGS
+# ------------------------------------------------------------------------------
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env.str("EMAIL_HOST")
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = env.int("EMAIL_HOST_PORT")
+EMAIL_USE_TLS = env.bool("EMAIL_HOST_USE_TLS")
+DEFAULT_FROM_EMAIL = env.str(
+    "DEFAULT_FROM_EMAIL",
+    "no-reply@cs50w-network-backend.com",
+)
+SERVER_EMAIL = env.str("SERVER_EMAIL", DEFAULT_FROM_EMAIL)

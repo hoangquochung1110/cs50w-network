@@ -88,3 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 SITE_ID = 1
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "no-reply@cs50w-network.com"
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
