@@ -24,7 +24,7 @@ def up_containers(context, containers, detach=True, **kwargs):
     else:
         common.success("Bring up all containers")
     cmd = (
-        f"docker-compose up "
+        f"docker compose up "
         f"{'-d ' if detach else ''}"
         f"{' '.join(containers)}"
     )
