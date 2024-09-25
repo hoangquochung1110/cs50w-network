@@ -7,5 +7,6 @@ pyenv local cs50
 
 Install requirements
 ```
+poetry lock
 poetry install --no-root --no-interaction --no-ansi
 ```
