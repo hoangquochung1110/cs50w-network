@@ -10,7 +10,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-django = ">=3.2"
+django = "4.2.3"
 # https://www.django-rest-framework.org/
 djangorestframework = "^3.14.0"
 # https://drf-spectacular.readthedocs.io/en/latest/
@@ -60,7 +60,7 @@ flake8-pyproject = "^1.2.3"
 mccabe = "^0.7.0"
 # Mypy is a static type checker for Python.
 # https://mypy.readthedocs.io/en/stable/
-mypy = "^1.7.1"
+mypy = "^1.11.1"
 # This is a PEP 561 type stub package for the `requests` package
 # https://pypi.org/project/types-requests/
 types-requests = "^2.31.0.10"
@@ -96,3 +96,12 @@ toml = "^0.10.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+# https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+ignore_missing_imports = true
+strict = false
+warn_no_return = false
+check_untyped_defs = true
+disallow_any_generics = true
+exclude = "venv|/.venv"
