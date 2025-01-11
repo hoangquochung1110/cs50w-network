@@ -1,8 +1,5 @@
-[project]
-requires-python = ">=3.8"
-
 [tool.poetry]
-name = "cs50w-network"
+name = "network"
 version = "0.1.0"
 description = ""
 authors = ["Hung Hoang <arsenalforeversince2007@gmail.com>"]
