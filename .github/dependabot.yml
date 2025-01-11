@@ -1,0 +1,13 @@
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    # Look for `package.json` and `lock` files in the `root` directory
+    directory: "requirements/"
+    # Check for updates once a day.
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "all"
