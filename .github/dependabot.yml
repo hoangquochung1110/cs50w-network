@@ -3,7 +3,7 @@ version: 2
 updates:
   - package-ecosystem: "pip"
     # Look for `package.json` and `lock` files in the `root` directory
-    directory: "requirements/"
+    directory: "/"
     # Check for updates once a day.
     schedule:
       interval: "daily"
