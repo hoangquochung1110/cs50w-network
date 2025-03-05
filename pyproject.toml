@@ -21,7 +21,7 @@ whitenoise = "^6.5.0"
 invoke = "^2.2.0"
 # A framework for managing and maintaining multi-language pre-commit hooks.
 # https://pre-commit.com/
-pre-commit = "^3.5.0"
+pre-commit = "^4.1.0"
 rich = "^13.5.3"
 
 [tool.poetry.group.dev.dependencies]
