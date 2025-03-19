@@ -11,7 +11,7 @@ django = "5.1.6"
 # https://www.django-rest-framework.org/
 djangorestframework = "^3.14.0"
 # https://drf-spectacular.readthedocs.io/en/latest/
-drf-spectacular = "^0.26.5"
+drf-spectacular = "^0.28.0"
 
 pillow = "^10.0.1"
 gunicorn = "^23.0.0"
