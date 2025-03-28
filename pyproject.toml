@@ -80,7 +80,7 @@ factory-boy = "^3.3.0"
 werkzeug = "^3.0.6"
 # Tool for measuring code coverage of Python programs
 # https://coverage.readthedocs.io/en/7.3.2/
-coverage = "^7.3.2"
+coverage = "^7.7.1"
 # Psycopg is a PostgreSQL adapter for the Python
 # https://www.psycopg.org/docs/install.html
 psycopg2-binary = "^2.9.9"
