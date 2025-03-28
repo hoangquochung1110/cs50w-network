@@ -60,7 +60,7 @@ mccabe = "^0.7.0"
 mypy = "^1.11.1"
 # This is a PEP 561 type stub package for the `requests` package
 # https://pypi.org/project/types-requests/
-types-requests = "^2.31.0.10"
+types-requests = "^2.32.0.20250328"
 
 [tool.poetry.group.test.dependencies]
 # Provides a Django management command to check whether the primary database is ready to accept connections.
